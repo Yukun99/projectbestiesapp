@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
@@ -19,6 +19,16 @@ export default function SignUp() {
   const [imgUrl, setImgUrl] = useState(null);
   const [projects, setProjects] = useState([]);
   const colors = useColors();
+  const [delay, setDelay] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDelay(false), 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (delay) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
