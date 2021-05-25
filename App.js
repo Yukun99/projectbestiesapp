@@ -70,7 +70,13 @@ const App: () => Node = () => {
   }
 
   // displays login screen if not logged in
-  return <Login onGoogleButtonPress={onGoogleButtonPress} />;
+  return (
+    <AppearanceProvider>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Login onGoogleButtonPress={onGoogleButtonPress} />
+      </NavigationContainer>
+    </AppearanceProvider>
+  );
 };
 
 // optional StyleSheet for future app styling
