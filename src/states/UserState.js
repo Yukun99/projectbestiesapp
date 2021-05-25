@@ -25,21 +25,15 @@ export function updateUser(email, fieldType, value) {
 //https://scontent.fsin9-1.fna.fbcdn.net/v/t31.18172-8/12977077_1073993765975019_6607428498084026554_o.jpg?_nc_cat=108&_nc_map=test-rt&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=wZq_sLltDRMAX-awyEr&_nc_ht=scontent.fsin9-1.fna&oh=bb1a9e670e630d6612819480af96bfd2&oe=60D0F39C
 export function setUser(name, email, age, year, imgUrl, projects) {
   axios
-    .post(
-      '/tinder/users',
-      {
-        name: name,
-        email: email,
-        age: age,
-        year: year,
-        imgUrl: imgUrl,
-        projects: projects,
-        creationDate: new Date(),
-      },
-      {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    )
+    .post('/tinder/users', {
+      name: name,
+      email: email,
+      age: age,
+      year: year,
+      imgUrl: imgUrl,
+      projects: projects,
+      creationDate: new Date(),
+    })
     .then(
       res => {
         console.log('Starting data transfer to database');
