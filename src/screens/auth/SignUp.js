@@ -13,7 +13,7 @@ const WIDTH = dim.width;
 
 export default function SignUp() {
   const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState(auth().currentUser.email);
   const [age, setAge] = useState(null);
   const [year, setYear] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
@@ -47,16 +47,6 @@ export default function SignUp() {
             label={'Name'}
             onChangeText={data => setName(data)}
             value={name}
-            autoCorrect={false}
-            style={styles.inputBox}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Email Address'} style={styles.inputText} />
-          <ThemedTextInput
-            label={'Email Address'}
-            onChangeText={data => setEmail(data)}
-            value={email}
             autoCorrect={false}
             style={styles.inputBox}
           />

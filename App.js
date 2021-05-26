@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
 // styling bs
+import 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
 import {
   DefaultTheme,
