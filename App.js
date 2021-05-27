@@ -9,6 +9,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // setting up google auth
 import auth from '@react-native-firebase/auth';

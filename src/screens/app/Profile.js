@@ -1,13 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
-import {GoogleSigninButton} from '@react-native-community/google-signin';
+import {View, StyleSheet, Image} from 'react-native';
 import useColors from '../../states/ThemeState';
-import {useColorScheme} from 'react-native-appearance';
 import ThemedText from '../../components/ThemedText';
 import useUser from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
-import {Button, Icon} from 'react-native-elements';
-import IconButton from '../../components/IconButton';
+import ContainButton from '../../components/ContainButton';
+import {Icon} from 'react-native-elements';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -20,60 +18,48 @@ export default function Profile(props) {
   }
   return (
     <View style={[{backgroundColor: colors.background}, styles.container]}>
-      <Image
-        source={{uri: `${user.imgUrl}`}}
-        style={{
-          width: 0.4 * HEIGHT,
-          height: 0.4 * HEIGHT,
-          borderRadius: HEIGHT * 0.4,
-        }}
-      />
+      <ThemedText text={'Profile'} style={styles.title} />
+      <View style={[{backgroundColor: colors.border}, styles.frame]} />
+      <Image source={{uri: `${user.imgUrl}`}} style={styles.image} />
       <ThemedText text={`${user.name}`} style={styles.name} />
+      <ThemedText text={`${user.age}`} style={styles.age} />
       <View>
-        <IconButton
-          style={{
-            width: 0.07 * HEIGHT,
-            height: 0.07 * HEIGHT,
-            borderRadius: HEIGHT * 0.07,
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            left: WIDTH * 0.2,
-            top: 0.05 * HEIGHT,
-          }}
-          name={'setting'}
-          type={'antdesign'}
-          size={35}
+        <ContainButton
+          size={0.07 * HEIGHT}
+          style={styles.leftButton}
+          content={
+            <Icon
+              name={'setting'}
+              type={'antdesign'}
+              size={35}
+              color={colors.text}
+            />
+          }
         />
-        <IconButton
-          style={{
-            width: 0.07 * HEIGHT,
-            height: 0.07 * HEIGHT,
-            borderRadius: HEIGHT * 0.07,
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            right: WIDTH * 0.2,
-            top: 0.05 * HEIGHT,
-            paddingLeft: 0.007 * WIDTH,
-          }}
-          name={'logout'}
-          type={'antdesign'}
-          size={30}
+        <ContainButton
+          size={0.07 * HEIGHT}
+          style={styles.rightButton}
+          content={
+            <Icon
+              name={'logout'}
+              type={'antdesign'}
+              size={30}
+              color={colors.text}
+            />
+          }
         />
       </View>
-      <IconButton
-        style={{
-          width: 0.1 * HEIGHT,
-          height: 0.1 * HEIGHT,
-          borderRadius: HEIGHT * 0.1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: HEIGHT * 0.07,
-        }}
-        name={'pencil'}
-        type={'evilicon'}
-        size={55}
+      <ContainButton
+        size={0.1 * HEIGHT}
+        style={styles.mainButton}
+        content={
+          <Icon
+            name={'pencil'}
+            type={'evilicon'}
+            size={55}
+            color={colors.text}
+          />
+        }
       />
     </View>
   );
@@ -85,12 +71,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    position: 'absolute',
+    top: HEIGHT * 0.01,
+    fontSize: HEIGHT * 0.06,
+    zIndex: 1,
+  },
+  frame: {
+    position: 'absolute',
+    height: HEIGHT,
+    width: HEIGHT,
+    top: -HEIGHT * 0.32,
+    borderBottomEndRadius: HEIGHT * 0.5,
+    borderBottomStartRadius: HEIGHT * 0.5,
+    opacity: 0.75,
+  },
+  image: {
+    width: 0.9 * WIDTH,
+    height: 0.9 * WIDTH,
+    borderRadius: 0.45 * WIDTH,
+  },
   name: {
-    fontSize: 25,
-    marginTop: 30,
+    fontSize: HEIGHT * 0.04,
+    marginTop: HEIGHT * 0.02,
+  },
+  age: {
+    fontSize: HEIGHT * 0.025,
   },
   icon: {
     height: 50,
     width: 50,
+  },
+  rightButton: {
+    position: 'absolute',
+    left: 0.2 * WIDTH,
+    top: 0.05 * HEIGHT,
+  },
+  leftButton: {
+    position: 'absolute',
+    right: 0.2 * WIDTH,
+    top: 0.05 * HEIGHT,
+  },
+  mainButton: {
+    marginTop: 0.07 * HEIGHT,
   },
 });
