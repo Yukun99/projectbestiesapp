@@ -142,7 +142,10 @@ export default function Swipe() {
                 end={{x: 0, y: 0}}
                 style={styles.textContainer}>
                 <ThemedText text={user.name} style={styles.nameText} />
-                <ThemedText text={'Age: ' + user.age} style={styles.ageText} />
+                <ThemedText
+                  text={'Year ' + user.year}
+                  style={styles.yearText}
+                />
               </LinearGradient>
             </View>
           </Animated.View>
@@ -171,7 +174,10 @@ export default function Swipe() {
                 end={{x: 0, y: 0}}
                 style={styles.textContainer}>
                 <ThemedText text={user.name} style={styles.nameText} />
-                <ThemedText text={'Age: ' + user.age} style={styles.ageText} />
+                <ThemedText
+                  text={'Year ' + user.year}
+                  style={styles.yearText}
+                />
               </LinearGradient>
             </View>
           </Animated.View>
@@ -246,7 +252,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     color: 'white',
   },
-  ageText: {
+  yearText: {
     width: '100%',
     fontSize: WIDTH / 17,
     paddingBottom: 15,
