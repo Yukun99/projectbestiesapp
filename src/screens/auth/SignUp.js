@@ -11,23 +11,50 @@ import useColors from '../../states/ThemeState';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function SignUp() {
-  const [name, setName] = useState(null);
+export default function SignUp({user, update}) {
+  const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(auth().currentUser.email);
-  const [age, setAge] = useState(null);
-  const [year, setYear] = useState(null);
+  const [age, setAge] = useState(undefined);
+  const [year, setYear] = useState(undefined);
   const [imgUrl, setImgUrl] = useState(null);
   const [projects, setProjects] = useState([]);
   const colors = useColors();
   const [delay, setDelay] = useState(true);
+  let button = (
+    <ThemedButton
+      label={'Submit'}
+      style={styles.submitButton}
+      disabled={true}
+      onPress={() => {
+        setUser(name, email, age, year, imgUrl, projects);
+        update();
+      }}
+    />
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => setDelay(false), 2000);
+    if (user) {
+      update();
+    }
     return () => clearTimeout(timeout);
-  }, []);
+  }, [update, user]);
 
   if (delay) {
     return null;
+  }
+
+  if (name && email && age && year) {
+    button = (
+      <ThemedButton
+        label={'Submit'}
+        style={styles.submitButton}
+        onPress={() => {
+          setUser(name, email, age, year, imgUrl, projects);
+          update();
+        }}
+      />
+    );
   }
 
   return (
@@ -122,16 +149,7 @@ export default function SignUp() {
             style={styles.inputBox}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <ThemedButton
-            label={'Submit'}
-            style={styles.submitButton}
-            // disabled={true}
-            onPress={() => {
-              setUser(name, email, age, year, imgUrl, projects);
-            }}
-          />
-        </View>
+        <View style={styles.inputContainer}>{button}</View>
       </ScrollView>
     </View>
   );

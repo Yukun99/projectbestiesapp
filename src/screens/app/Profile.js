@@ -6,6 +6,7 @@ import useUser from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
+import auth from '@react-native-firebase/auth';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -39,6 +40,7 @@ export default function Profile(props) {
         <ContainButton
           size={0.07 * HEIGHT}
           style={styles.rightButton}
+          onPress={() => auth().signOut()}
           content={
             <Icon
               name={'logout'}
@@ -87,9 +89,9 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   image: {
-    width: 0.9 * WIDTH,
-    height: 0.9 * WIDTH,
-    borderRadius: 0.45 * WIDTH,
+    width: 0.4 * HEIGHT,
+    height: 0.4 * HEIGHT,
+    borderRadius: 0.2 * HEIGHT,
   },
   name: {
     fontSize: HEIGHT * 0.04,

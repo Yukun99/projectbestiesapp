@@ -14,7 +14,6 @@ export default function Swipe() {
   if (!user) {
     return null;
   }
-  console.log(user.imgUrl);
 
   return (
     <View style={styles.container}>
@@ -63,11 +62,13 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: WIDTH / 10,
     paddingLeft: 15,
+    color: 'white',
   },
   ageText: {
     width: '100%',
     fontSize: WIDTH / 17,
     paddingBottom: 15,
     paddingLeft: 15,
+    color: 'white',
   },
 });

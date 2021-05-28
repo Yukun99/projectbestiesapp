@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, LogBox, StyleSheet} from 'react-native';
 import useUser from '../states/UserState';
 import SignUp from '../screens/auth/SignUp';
@@ -35,9 +35,17 @@ function Icon(route, focused) {
 
 export default function AppStack() {
   const user = useUser();
-  if (!user) {
+  const [registered, setRegistered] = useState(false);
+  if (!registered) {
     // before login
-    return <SignUp />;
+    return (
+      <SignUp
+        user={user}
+        update={() => {
+          setRegistered(true);
+        }}
+      />
+    );
   } else {
     return (
       <Tab.Navigator
