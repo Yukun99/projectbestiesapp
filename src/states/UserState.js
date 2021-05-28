@@ -46,6 +46,26 @@ export function setUser(name, email, age, year, imgUrl, projects) {
     );
 }
 
+export function useUsers() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const req = await axios.get('/tinder/users');
+
+      setUsers(req.data);
+    }
+
+    fetchData();
+  }, []);
+
+  const res = users.filter(item => {
+    return item.email !== auth().currentUser.email;
+  });
+
+  return res;
+}
+
 function useUser() {
   const [users, setUsers] = useState([]);
 

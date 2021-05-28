@@ -83,9 +83,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: HEIGHT,
     width: HEIGHT,
-    top: -HEIGHT * 0.32,
-    borderBottomEndRadius: HEIGHT * 0.5,
-    borderBottomStartRadius: HEIGHT * 0.5,
+    top: -HEIGHT * 0.33,
+    borderRadius: HEIGHT * 0.5,
     opacity: 0.75,
   },
   image: {
