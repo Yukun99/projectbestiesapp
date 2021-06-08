@@ -26,13 +26,13 @@ export default function ThemedButton({label, style, disabled, ...rest}) {
       style={[
         style,
         {
-          backgroundColor: colors.border,
+          backgroundColor: '#ff69b4',
           shadowColor: '#000000',
           shadowOffset: {height: 1, width: 1},
           shadowOpacity: 1,
           shadowRadius: 1,
           elevation: 5,
-          borderColor: colors.border,
+          borderColor: '#ff69b4',
           borderWidth: 2.5,
           borderRadius: 5,
         },

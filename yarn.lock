@@ -5809,6 +5809,13 @@ react-native-parsed-text@0.0.22:
   dependencies:
     prop-types "^15.7.x"
 
+react-native-radio-button-group@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-radio-button-group/-/react-native-radio-button-group-1.0.3.tgz#62a1c37b73adb6d3eb2bd819bc7749041cc94052"
+  integrity sha512-4zLOHi0sLjBOTBG+t+Rmx3syvS2P5AccRsnMljJn3kBLMm6vbIdxhYcmxb1IFikk1B/GnJTwdsHMJop8AxX4/A==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-ratings@^7.3.0:
   version "7.6.1"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-7.6.1.tgz#b3d8a99a0c12fd6874f7e3c0e492089543d837c8"

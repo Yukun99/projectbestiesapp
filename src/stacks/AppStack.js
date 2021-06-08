@@ -6,6 +6,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Profile from '../screens/app/Profile';
 import Swipe from '../screens/app/Swipe';
 import Chat from '../screens/app/Chat';
+import PersonalityTest from '../screens/auth/PersonalityTest';
 
 LogBox.ignoreLogs(['Reanimated 2']);
 
