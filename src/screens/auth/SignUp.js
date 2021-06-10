@@ -7,6 +7,7 @@ import {setUser} from '../../states/UserState';
 import auth from '@react-native-firebase/auth';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
+import PersonalityTest from './PersonalityTest';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -20,6 +21,7 @@ export default function SignUp({user, update}) {
   const [projects, setProjects] = useState([]);
   const colors = useColors();
   const [delay, setDelay] = useState(true);
+  const [registered, setRegistered] = useState(false);
   let button = (
     <ThemedButton
       label={'Submit'}
@@ -27,14 +29,13 @@ export default function SignUp({user, update}) {
       disabled={true}
       onPress={() => {
         setUser(name, email, age, year, imgUrl, projects);
-        update();
       }}
     />
   );
 
   useEffect(() => {
     const timeout = setTimeout(() => setDelay(false), 2000);
-    if (user) {
+    if (user && user.testResults) {
       update();
     }
     return () => clearTimeout(timeout);
@@ -51,108 +52,115 @@ export default function SignUp({user, update}) {
         style={styles.submitButton}
         onPress={() => {
           setUser(name, email, age, year, imgUrl, projects);
-          update();
+          setRegistered(true);
         }}
       />
     );
   }
 
-  return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <ThemedText text={'Welcome to Project Besties!'} style={styles.title} />
-        <ThemedText
-          text={'Please fill in the information below to get started.'}
-          style={styles.subtitle}
-        />
-        <View style={styles.inputContainer}>
+  if (!registered) {
+    return (
+      <View style={[styles.container, {backgroundColor: colors.background}]}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
           <ThemedText
-            text={'Full Name (as on Student Card)'}
-            style={styles.inputText}
+            text={'Welcome to Project Besties!'}
+            style={styles.title}
           />
-          <ThemedTextInput
-            label={'Name'}
-            onChangeText={data => setName(data)}
-            value={name}
-            autoCorrect={false}
-            style={styles.inputBox}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Age'} style={styles.inputText} />
-          <ThemedTextInput
-            label={'Age'}
-            onChangeText={data => setAge(data)}
-            value={age}
-            autoCorrect={false}
-            style={styles.inputBox}
-            keyboardType={'numeric'}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Year of Study'} style={styles.inputText} />
-          <ThemedTextInput
-            label={'Year'}
-            onChangeText={data => setYear(data)}
-            value={year}
-            autoCorrect={false}
-            style={styles.inputBox}
-            keyboardType={'numeric'}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Profile Image URL'} style={styles.inputText} />
-          <ThemedTextInput
-            label={'Image URL'}
-            onChangeText={data => setImgUrl(data)}
-            value={imgUrl}
-            autoCorrect={false}
-            style={styles.inputBox}
-            keyboardType={'url'}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Project List'} style={styles.inputText} />
           <ThemedText
-            text={'List out a few of the projects you would like to attempt.'}
-            style={styles.inputSubText}
+            text={'Please fill in the information below to get started.'}
+            style={styles.subtitle}
           />
-          <ThemedTextInput
-            label={'Project 1'}
-            onChangeText={data => {
-              projects[0] = data;
-            }}
-            value={projects[0]}
-            autoCorrect={false}
-            style={styles.inputBox}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedTextInput
-            label={'Project 2'}
-            onChangeText={data => {
-              projects[1] = data;
-            }}
-            value={projects[1]}
-            autoCorrect={false}
-            style={styles.inputBox}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedTextInput
-            label={'Project 3'}
-            onChangeText={data => {
-              projects[2] = data;
-            }}
-            value={projects[2]}
-            autoCorrect={false}
-            style={styles.inputBox}
-          />
-        </View>
-        <View style={styles.inputContainer}>{button}</View>
-      </ScrollView>
-    </View>
-  );
+          <View style={styles.inputContainer}>
+            <ThemedText
+              text={'Full Name (as on Student Card)'}
+              style={styles.inputText}
+            />
+            <ThemedTextInput
+              label={'Name'}
+              onChangeText={data => setName(data)}
+              value={name}
+              autoCorrect={false}
+              style={styles.inputBox}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedText text={'Age'} style={styles.inputText} />
+            <ThemedTextInput
+              label={'Age'}
+              onChangeText={data => setAge(data)}
+              value={age}
+              autoCorrect={false}
+              style={styles.inputBox}
+              keyboardType={'numeric'}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedText text={'Year of Study'} style={styles.inputText} />
+            <ThemedTextInput
+              label={'Year'}
+              onChangeText={data => setYear(data)}
+              value={year}
+              autoCorrect={false}
+              style={styles.inputBox}
+              keyboardType={'numeric'}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedText text={'Profile Image URL'} style={styles.inputText} />
+            <ThemedTextInput
+              label={'Image URL'}
+              onChangeText={data => setImgUrl(data)}
+              value={imgUrl}
+              autoCorrect={false}
+              style={styles.inputBox}
+              keyboardType={'url'}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedText text={'Project List'} style={styles.inputText} />
+            <ThemedText
+              text={'List out a few of the projects you would like to attempt.'}
+              style={styles.inputSubText}
+            />
+            <ThemedTextInput
+              label={'Project 1'}
+              onChangeText={data => {
+                projects[0] = data;
+              }}
+              value={projects[0]}
+              autoCorrect={false}
+              style={styles.inputBox}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedTextInput
+              label={'Project 2'}
+              onChangeText={data => {
+                projects[1] = data;
+              }}
+              value={projects[1]}
+              autoCorrect={false}
+              style={styles.inputBox}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedTextInput
+              label={'Project 3'}
+              onChangeText={data => {
+                projects[2] = data;
+              }}
+              value={projects[2]}
+              autoCorrect={false}
+              style={styles.inputBox}
+            />
+          </View>
+          <View style={styles.inputContainer}>{button}</View>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  return <PersonalityTest update={update}/>;
 }
 
 const styles = StyleSheet.create({
