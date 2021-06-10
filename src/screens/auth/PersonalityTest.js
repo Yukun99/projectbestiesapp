@@ -3,7 +3,7 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
 import ThemedTextInput from '../../components/ThemedTextInput';
-import {setUser} from '../../states/UserState';
+import useUser, {setUser, updateUser} from '../../states/UserState';
 import auth from '@react-native-firebase/auth';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
@@ -12,9 +12,10 @@ import ScaleButtons from '../../components/ScaleButtons';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function PersonalityTest() {
+export default function PersonalityTest({update}) {
   const colors = useColors();
-  const [logic, setLogic] = useState(undefined);
+  const user = useUser();
+  const [logic, setLogic] = useState(0);
   const [organ, setOrgan] = useState(undefined);
   const [support, setSupport] = useState(undefined);
   const [bigPic, setBigPic] = useState(undefined);
@@ -36,33 +37,67 @@ export default function PersonalityTest() {
       label={'Submit'}
       style={styles.submitButton}
       disabled={true}
-      // onPress={() => {
-      //    setUser(name, email, age, year, imgUrl, projects);
-      //    update();
-      // }}
     />
   );
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => setDelay(false), 2000);
-  //   if (user) {
-  //
-  //   }
-  //   return () => clearTimeout(timeout);
-  // }, [user]);
+  if (!user) {
+    return null;
+  }
 
-  // if (delay) {
-  //   return null;
-  // }
-
-  if (q1 && q2 && q3 && q4 && q5 && q6 && q7 && q8 && q9 && q10 & q11 && q12) {
+  if (q1 && q2 && q3 && q4 && q5 && q6 && q7 && q8 && q9 && q10 && q11 && q12) {
     button = (
       <ThemedButton
         label={'Submit'}
         style={styles.submitButton}
-        // onPress={() => {
-        //   setUser(name, email, age, year, imgUrl, projects);
-        // }}
+        onPress={() => {
+          const logicScore = q1 + q5 + q9;
+          setLogic(logicScore);
+          setOrgan(q2 + q6 + q10);
+          setSupport(q3 + q7 + q11);
+          setBigPic(q4 + q8 + q12);
+
+          const scores = [
+            q1 + q5 + q9,
+            q2 + q6 + q10,
+            q3 + q7 + q11,
+            q4 + q8 + q12,
+          ];
+          let max = scores[0];
+          let category = 0;
+          console.log(scores);
+
+          for (let i = 0; i < 4; i++) {
+            console.log('gay');
+            if (scores[i] > max) {
+              max = scores[i];
+              category = i;
+              console.log(category);
+            }
+          }
+          let workStyle = '';
+
+          switch (category) {
+            case 0:
+              workStyle = 'Logical';
+              break;
+            case 1:
+              workStyle = 'Organised';
+              break;
+            case 2:
+              workStyle = 'Supportive';
+              break;
+            case 3:
+              workStyle = 'Big Picture';
+              break;
+            default:
+              break;
+          }
+
+          console.log('hi ' + workStyle);
+
+          updateUser(user._id, {testResults: workStyle});
+          update();
+        }}
       />
     );
   }
@@ -122,9 +157,7 @@ export default function PersonalityTest() {
         {/*Q5 - Logic*/}
         <View style={styles.inputContainer}>
           <ThemedText
-            text={
-              '5. I like solving complex problems.'
-            }
+            text={'5. I like solving complex problems.'}
             style={styles.inputText}
           />
           <ScaleButtons answer={q5} setAnswer={setQ5} />
@@ -144,9 +177,7 @@ export default function PersonalityTest() {
         {/*Q7 - Support*/}
         <View style={styles.inputContainer}>
           <ThemedText
-            text={
-              '7. I am good at persuading or selling ideas.'
-            }
+            text={'7. I am good at persuading or selling ideas.'}
             style={styles.inputText}
           />
           <ScaleButtons answer={q7} setAnswer={setQ7} />
@@ -206,7 +237,6 @@ export default function PersonalityTest() {
           />
           <ScaleButtons answer={q12} setAnswer={setQ12} />
         </View>
-
 
         <View style={styles.inputContainer}>{button}</View>
       </ScrollView>

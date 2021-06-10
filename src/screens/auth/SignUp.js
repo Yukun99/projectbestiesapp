@@ -38,6 +38,9 @@ export default function SignUp({user, update}) {
     if (user && user.testResults) {
       update();
     }
+    if (user) {
+      setRegistered(true);
+    }
     return () => clearTimeout(timeout);
   }, [update, user]);
 
@@ -159,7 +162,6 @@ export default function SignUp({user, update}) {
       </View>
     );
   }
-
   return <PersonalityTest update={update}/>;
 }
 

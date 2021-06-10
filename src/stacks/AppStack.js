@@ -47,7 +47,8 @@ export default function AppStack() {
         }}
       />
     );
-  } else {
+  }
+  else {
     if (!user) {
       return null;
     }
