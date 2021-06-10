@@ -1,112 +1,72 @@
+import useUser, {useChat} from '../../states/UserState';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
-import {GiftedChat, Bubble, Send, ChatInput, LeftAction, SendButton} from 'react-native-gifted-chat';
-import useUser from '../../states/UserState';
-import {View, StyleSheet} from 'react-native';
-import {IconButton} from 'react-native-paper';
 import {dim} from '../../lib/Dimensions';
-import useColors from "../../states/ThemeState";
+import ChatUserPicture from '../../components/ChatUserPicture';
+import ThemedText from '../../components/ThemedText';
+import ChatList from './ChatList';
+import useColors from '../../states/ThemeState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
-export default function RoomScreen() {
-  const user = useUser();
+
+export default function Chat({self}) {
   const colors = useColors();
+  const [current, setCurrent] = useState(self);
+  const messages = useChat(current.email);
 
-  const [messages, setMessages] = useState([
-    /**
-     * Mock message data
-     */
-    // example of system message
-    {
-      _id: 0,
-      text: 'New room created.',
-      createdAt: new Date().getTime(),
-      system: true,
-    },
-    // example of chat message
-    {
-      _id: 1,
-      text: 'Henlo!',
-      createdAt: new Date().getTime(),
-      user: {
-        _id: 2,
-        name: 'Alyssa Savier',
-        avatar:
-          'https://static.wikia.nocookie.net/fictionalfighters/images/f/f7/Sasori.png/revision/latest/top-crop/width/360/height/450?cb=20150424203605',
-      },
-    },
-  ]);
-
-  if (!user) {
-    return null;
-  }
-
-  // helper method that is sends a message
-  function handleSend(newMessage = []) {
-    setMessages(GiftedChat.append(messages, newMessage));
-  }
-
-  function renderBubble(props) {
+  if (!current || current === self) {
     return (
-      // Step 3: return the component
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            // Here is the color change
-            backgroundColor: '#FF69B4',
-          },
-        }}
-        textStyle={{
-          right: {
-            color: '#fff',
-          },
-        }}
-      />
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <ThemedText
+            style={[styles.list, {borderBottomColor: colors.border}]}
+            text={'Your Matches'}
+          />
+          <ChatList press={setCurrent} />
+        </ScrollView>
+      </View>
     );
   }
-
-  function renderSend(props) {
-    return (
-      <Send {...props}>
-        <View style={styles.sendingContainer}>
-          <IconButton icon="send-circle" size={40} color="#FF69B4" />
-        </View>
-      </Send>
-    );
-  }
-
-  // function renderComposer(props) {
-  //   return (
-  //     <View style={{ backgroundColor: colors.background, height: 200 }}>
-  //       <View style={styles.inputContainer}>
-  //         <LeftAction {...props} />
-  //         <ChatInput {...props} />
-  //         <SendButton {...props} />
-  //       </View>
-  //       <View></View>
-  //     </View>
-  //   );
-  // }
 
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={newMessage => handleSend(newMessage)}
-      user={{_id: 1, name: user.name, avatar: user.imgUrl}}
-      renderBubble={renderBubble}
-      showUserAvatar
-      placeholder="Type your message here..."
-      alwaysShowSend
-      renderSend={renderSend}
-      scrollToBottom
-    />
+    <View style={styles.container}>
+      <View style={[styles.topBar, {borderBottomWidth: 1, borderColor: colors.border}]}>
+        <ChatUserPicture user={current} />
+        <ThemedText text={current.name} style={styles.title} />
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollView}>{}</ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  sendingContainer: {
-    justifyContent: 'center',
+  container: {
+    flex: 1,
     alignItems: 'center',
+  },
+  topBar: {
+    height: 0.13 * HEIGHT,
+    width: WIDTH,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scrollView: {
+    width: WIDTH,
+    alignItems: 'center',
+  },
+  title: {
+    marginTop: HEIGHT * 0.01,
+    fontSize: HEIGHT * 0.025,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  list: {
+    marginTop: HEIGHT * 0.01,
+    fontSize: HEIGHT * 0.06,
+    width: WIDTH,
+    zIndex: 2,
+    borderBottomWidth: 1,
+    textAlign: 'center',
   },
 });

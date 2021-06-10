@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import ThemedText from '../../components/ThemedText';
-import useUser, {useUsers} from '../../states/UserState';
+import useUser, {updateUser, useUsers} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -16,8 +16,9 @@ const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function Swipe() {
-  // const user = useUser();
+  const self = useUser();
   const users = useUsers().reverse();
+  // console.log(self.matches);
 
   // initialise position of card
   const position = new Animated.ValueXY();
@@ -74,6 +75,12 @@ export default function Swipe() {
     },
     onPanResponderRelease: (evt, gestureState) => {
       if (gestureState.dx > 120) {
+        // yes
+        const matches = self.matches;
+        matches[matches.length] = users[index].email;
+        const swiped = self.swiped;
+        swiped[swiped.length] = users[index].email;
+        updateUser(self._id, {matches: matches, swiped: swiped});
         Animated.spring(position, {
           toValue: {x: WIDTH + 100, y: gestureState.dy},
           useNativeDriver: true,
@@ -81,6 +88,10 @@ export default function Swipe() {
         setIndex(index + 1);
         position.setValue({x: 0, y: 0});
       } else if (gestureState.dx < -120) {
+        // no
+        const swiped = self.swiped;
+        swiped[swiped.length] = users[index].email;
+        updateUser(self._id, {swiped: swiped});
         Animated.spring(position, {
           toValue: {x: -WIDTH - 100, y: gestureState.dy},
           useNativeDriver: true,
@@ -97,13 +108,13 @@ export default function Swipe() {
     },
   });
 
-  if (!users) {
+  if (!users || !self) {
     return null;
   }
 
   return users
     .map((user, i) => {
-      if (i < index) {
+      if (i < index || self.swiped.includes(user.email)) {
         return null;
       } else if (i === index) {
         return (

@@ -48,6 +48,9 @@ export default function AppStack() {
       />
     );
   } else {
+    if (!user) {
+      return null;
+    }
     return (
       <Tab.Navigator
         initialRouteName={'Swipe'}
@@ -62,7 +65,7 @@ export default function AppStack() {
         }}>
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name="Swipe" component={Swipe} />
-        <Tab.Screen name="Chat" component={Chat} />
+        <Tab.Screen name="Chat" children={() => <Chat self={user} />} />
       </Tab.Navigator>
     );
   }
