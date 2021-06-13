@@ -5,12 +5,17 @@ import {
   Animated,
   PanResponder,
   Text,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import ThemedText from '../../components/ThemedText';
 import useUser, {updateUser, useUsers} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
+import ThemedButton from '../../components/ThemedButton';
+import ContainButton from '../../components/ContainButton';
+import {Icon} from 'react-native-elements';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -18,6 +23,8 @@ const WIDTH = dim.width;
 export default function Swipe() {
   const self = useUser();
   const users = useUsers().reverse();
+
+  // for info button to show user info
   const [info, setInfo] = useState(undefined);
   // console.log(self.matches);
 
@@ -113,96 +120,153 @@ export default function Swipe() {
     return null;
   }
 
-  return users
-    .map((user, i) => {
-      if (i < index) {
-        return null;
-      } else if (i === index) {
-        if (self.swiped && self.swiped.includes(user.email)) {
-          setIndex(index + 1);
-        }
-        return (
-          <Animated.View
-            {...panResponder.panHandlers}
-            key={i}
-            style={[styles.container, rotateAndTranslate]}>
-            <Animated.View
-              style={[
-                styles.yesContainer,
-                {
-                  opacity: yesOpacity,
-                },
-              ]}>
-              <Text style={[styles.yesText]}>YES!</Text>
-            </Animated.View>
-            <Animated.View
-              style={[
-                styles.noContainer,
-                {
-                  opacity: noOpacity,
-                },
-              ]}>
-              <Text style={[styles.noText]}>NO!</Text>
-            </Animated.View>
-            <View style={styles.swipeCard}>
-              <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
-              <LinearGradient
-                colors={[
-                  'rgba(0,0,0,1)',
-                  'rgba(0,0,0,0.95)',
-                  'rgba(0,0,0,0.9)',
-                  'rgba(0,0,0,0)',
-                ]}
-                start={{x: 0, y: 1}}
-                end={{x: 0, y: 0}}
-                style={styles.textContainer}>
-                <ThemedText text={user.name} style={styles.nameText} />
-                <ThemedText
-                  text={'Year ' + user.year}
-                  style={styles.yearText}
-                />
-              </LinearGradient>
-            </View>
-          </Animated.View>
-        );
-      } else {
-        if (self.swiped && self.swiped.includes(user.email)) {
+  if (!info) {
+    return users
+      .map((user, i) => {
+        if (i < index) {
           return null;
-        }
-        return (
-          <Animated.View
-            key={i}
-            style={[
-              styles.container,
-              {
-                opacity: nextCardOpacity,
-                transform: [{scale: nextCardScale}],
-              },
-            ]}>
-            <View style={styles.swipeCard}>
-              <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
-              <LinearGradient
-                colors={[
-                  'rgba(0,0,0,1)',
-                  'rgba(0,0,0,0.95)',
-                  'rgba(0,0,0,0.9)',
-                  'rgba(0,0,0,0)',
-                ]}
-                start={{x: 0, y: 1}}
-                end={{x: 0, y: 0}}
-                style={styles.textContainer}>
-                <ThemedText text={user.name} style={styles.nameText} />
-                <ThemedText
-                  text={'Year ' + user.year}
-                  style={styles.yearText}
+        } else if (i === index) {
+          if (self.swiped && self.swiped.includes(user.email)) {
+            setIndex(index + 1);
+          }
+          return (
+            <Animated.View
+              {...panResponder.panHandlers}
+              key={i}
+              style={[styles.container, rotateAndTranslate]}>
+              <Animated.View
+                style={[
+                  styles.yesContainer,
+                  {
+                    opacity: yesOpacity,
+                  },
+                ]}>
+                <Text style={[styles.yesText]}>YES!</Text>
+              </Animated.View>
+              <Animated.View
+                style={[
+                  styles.noContainer,
+                  {
+                    opacity: noOpacity,
+                  },
+                ]}>
+                <Text style={[styles.noText]}>NO!</Text>
+              </Animated.View>
+              <View style={styles.swipeCard}>
+                <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+                <TouchableOpacity
+                  style={[styles.textContainer, styles.infoButton]}
+                  onPress={() => {
+                    setInfo(user);
+                    console.log('gay');
+                  }}
                 />
-              </LinearGradient>
-            </View>
-          </Animated.View>
-        );
-      }
-    })
-    .reverse();
+                <LinearGradient
+                  colors={[
+                    'rgba(0,0,0,1)',
+                    'rgba(0,0,0,0.95)',
+                    'rgba(0,0,0,0.9)',
+                    'rgba(0,0,0,0)',
+                  ]}
+                  start={{x: 0, y: 1}}
+                  end={{x: 0, y: 0}}
+                  style={styles.textContainer}>
+                  <ThemedText text={user.name} style={styles.nameText} />
+                  <ThemedText
+                    text={'Year ' + user.year}
+                    style={styles.yearText}
+                  />
+                </LinearGradient>
+              </View>
+            </Animated.View>
+          );
+        } else {
+          if (self.swiped && self.swiped.includes(user.email)) {
+            return null;
+          }
+          return (
+            <Animated.View
+              key={i}
+              style={[
+                styles.container,
+                {
+                  opacity: nextCardOpacity,
+                  transform: [{scale: nextCardScale}],
+                },
+              ]}>
+              <View style={styles.swipeCard}>
+                <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+                <LinearGradient
+                  colors={[
+                    'rgba(0,0,0,1)',
+                    'rgba(0,0,0,0.95)',
+                    'rgba(0,0,0,0.9)',
+                    'rgba(0,0,0,0)',
+                  ]}
+                  start={{x: 0, y: 1}}
+                  end={{x: 0, y: 0}}
+                  style={styles.textContainer}>
+                  <ThemedText text={user.name} style={styles.nameText} />
+                  <ThemedText
+                    text={'Year ' + user.year}
+                    style={styles.yearText}
+                  />
+                </LinearGradient>
+              </View>
+            </Animated.View>
+          );
+        }
+      })
+      .reverse();
+  } else {
+    console.log('im here bitch');
+    return (
+      <View style={styles.infoContainer}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
+          <View style={styles.header}>
+            <ThemedText text={info.name} style={styles.infoName} />
+            {/*<ThemedButton*/}
+            {/*  label={'Submit'}*/}
+            {/*  style={styles.submitButton}*/}
+            {/*  onPress={() => {*/}
+            {/*    setInfo(undefined);*/}
+            {/*    console.log('lesbian');*/}
+            {/*  }}*/}
+            {/*/>*/}
+            <ContainButton
+              size={0.09 * HEIGHT}
+              style={styles.backButton}
+              content={
+                <Icon
+                  name={'arrowup'}
+                  type={'antdesign'}
+                  size={30}
+                  color={'white'}
+                />
+              }
+              backgroundColor={'#FF69B4FF'}
+              borderColor={'#FF69B4FF'}
+              onPress={() => {
+                setInfo(undefined);
+                console.log('lesbian');
+              }}
+            />
+          </View>
+          <ThemedText text={'Age'} style={styles.infoTitle} />
+          <ThemedText text={info.age} style={styles.infoUser} />
+          <ThemedText text={'Year'} style={styles.infoTitle} />
+          <ThemedText text={info.year} style={styles.infoUser} />
+          <ThemedText text={'Projects'} style={styles.infoTitle} />
+          {info.projects.map((project, i) => (
+            <ThemedText key={i} text={project} style={styles.infoUser} />
+          ))}
+          <ThemedText text={'Workstyle'} style={styles.infoTitle} />
+          <ThemedText text={info.testResults} style={styles.infoUser} />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -261,8 +325,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     left: 0,
-    height: '20%',
-    width: '100%',
+    height: 0.2 * HEIGHT,
+    width: WIDTH,
   },
   nameText: {
     width: '100%',
@@ -276,5 +340,62 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingLeft: 15,
     color: 'white',
+  },
+  infoButton: {
+    zIndex: 1,
+  },
+  infoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+  },
+  submitButton: {
+    height: 0.05 * HEIGHT,
+    width: 0.5 * WIDTH,
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  infoName: {
+    marginTop: 12,
+    fontSize: HEIGHT * 0.05,
+    fontWeight: 'bold',
+    marginLeft: 40,
+    alignSelf: 'flex-start',
+  },
+  infoImage: {
+    // justifyContent: 'center',
+    // alignSelf: 'center',
+    width: WIDTH - 10,
+    height: 0.75 * HEIGHT,
+    borderRadius: 10,
+  },
+  infoUser: {
+    marginLeft: 40,
+    marginTop: 10,
+    fontSize: 15,
+    alignSelf: 'flex-start',
+  },
+  infoTitle: {
+    marginLeft: 40,
+    marginTop: 10,
+    fontSize: 0.05 * WIDTH,
+    alignSelf: 'flex-start',
+    fontWeight: 'bold',
+  },
+  scrollView: {
+    width: WIDTH - 10,
+    // alignItems: 'center',
+  },
+  header: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  backButton: {
+    // height: 30,
+    // width: 30
+    backgroundColor: 'pink',
+    // alignSelf: 'flex-end'
+    marginLeft: 0.25 * WIDTH,
+    marginTop: -0.04 * HEIGHT,
   },
 });

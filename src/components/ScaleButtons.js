@@ -63,6 +63,7 @@ export default function ScaleButtons({answer, setAnswer, ...rest}) {
             status={answer === 5 ? 'checked' : 'unchecked'}
             onPress={() => setAnswer(5)}
             color={'#ff69b4'}
+            uncheckedColor={'#999999'}
           />
         </View>
       </RadioButton.Group>
