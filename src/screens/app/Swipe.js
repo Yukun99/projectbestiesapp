@@ -18,6 +18,7 @@ const WIDTH = dim.width;
 export default function Swipe() {
   const self = useUser();
   const users = useUsers().reverse();
+  const [info, setInfo] = useState(undefined);
   // console.log(self.matches);
 
   // initialise position of card
@@ -114,9 +115,12 @@ export default function Swipe() {
 
   return users
     .map((user, i) => {
-      if (i < index || self.swiped.includes(user.email)) {
+      if (i < index) {
         return null;
       } else if (i === index) {
+        if (self.swiped && self.swiped.includes(user.email)) {
+          setIndex(index + 1);
+        }
         return (
           <Animated.View
             {...panResponder.panHandlers}
@@ -162,6 +166,9 @@ export default function Swipe() {
           </Animated.View>
         );
       } else {
+        if (self.swiped && self.swiped.includes(user.email)) {
+          return null;
+        }
         return (
           <Animated.View
             key={i}
