@@ -6,13 +6,14 @@ import React from 'react';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function ChatUserPicture({user}) {
+export default function ChatUserPicture({user, style}) {
   const colors = useColors();
 
   return (
     <Image
       source={{uri: user.imgUrl}}
       style={[
+        style,
         styles.picture,
         {
           borderColor: colors.border,

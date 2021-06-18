@@ -162,7 +162,7 @@ export default function SignUp({user, update}) {
       </View>
     );
   }
-  return <PersonalityTest update={update}/>;
+  return <PersonalityTest update={update} />;
 }
 
 const styles = StyleSheet.create({

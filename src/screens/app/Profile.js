@@ -28,6 +28,7 @@ export default function Profile(props) {
         <ContainButton
           size={0.07 * HEIGHT}
           style={styles.leftButton}
+          borderColor={colors.text}
           content={
             <Icon
               name={'setting'}
@@ -41,6 +42,7 @@ export default function Profile(props) {
           size={0.07 * HEIGHT}
           style={styles.rightButton}
           onPress={() => auth().signOut()}
+          borderColor={colors.text}
           content={
             <Icon
               name={'logout'}
@@ -54,6 +56,7 @@ export default function Profile(props) {
       <ContainButton
         size={0.1 * HEIGHT}
         style={styles.mainButton}
+        borderColor={colors.text}
         content={
           <Icon
             name={'pencil'}
@@ -75,8 +78,8 @@ const styles = StyleSheet.create({
   },
   title: {
     position: 'absolute',
-    top: HEIGHT * 0.01,
-    fontSize: HEIGHT * 0.06,
+    top: HEIGHT * 0.025,
+    fontSize: HEIGHT * 0.05,
     zIndex: 1,
   },
   frame: {
