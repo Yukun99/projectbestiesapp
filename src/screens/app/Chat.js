@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
     margin: 0,
     paddingLeft: 10,
     width: '100%',
-    position: 'absolute',
     bottom: 0,
     borderTopWidth: 1,
     borderBottomWidth: 0,
@@ -192,7 +191,8 @@ const styles = StyleSheet.create({
   messageContainer: {
     width: WIDTH,
     justifyContent: 'flex-end',
-    paddingTop: 0.0075 * HEIGHT,
+    paddingTop: 0.00375 * HEIGHT,
+    paddingBottom: 0.00375 * HEIGHT,
   },
   messageIconLeft: {
     position: 'absolute',
