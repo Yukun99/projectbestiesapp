@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 0.0175 * HEIGHT,
     borderBottomEndRadius: 0.0175 * HEIGHT,
     borderBottomStartRadius: 0.005 * HEIGHT,
-    maxWidth: WIDTH - 0.013 * HEIGHT,
+    maxWidth: WIDTH - 0.24 * WIDTH,
   },
   messageBubbleRight: {
     // position: 'absolute',
@@ -224,6 +224,6 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 0.0175 * HEIGHT,
     borderBottomStartRadius: 0.0175 * HEIGHT,
     borderBottomEndRadius: 0.005 * HEIGHT,
-    maxWidth: WIDTH - 0.13 * HEIGHT,
+    maxWidth: WIDTH - 0.24 * WIDTH,
   },
 });
