@@ -1,4 +1,9 @@
-import {setChat, updateChat, useChat, useChatId} from '../../states/UserState';
+import {
+  setChat,
+  updateChat,
+  useChat,
+  useChatId,
+} from '../../states/UserState';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {dim} from '../../lib/Dimensions';
@@ -9,6 +14,7 @@ import useColors from '../../states/ThemeState';
 import ThemedTextInput from '../../components/ThemedTextInput';
 import {Icon} from 'react-native-elements';
 import ContainButton from '../../components/ContainButton';
+import io from 'socket.io-client';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -16,9 +22,38 @@ const WIDTH = dim.width;
 export default function Chat({self}) {
   const colors = useColors();
   const [current, setCurrent] = useState(self);
-  const chat = useChat(current.email);
+  let chat = useChat(current.email);
   const otherid = useChatId(current.email, self.email);
   const [message, setMessage] = useState('');
+
+  function componentDidMount() {
+    //get previous messages
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    chat = useChat(current.email);
+
+    //start socket connections
+    const socket = io(
+      'https://projectbesties-backend.herokuapp.com/tinder/chats',
+    );
+    socket.connect();
+    socket.on('incomingMessage', () => {
+      console.log('test');
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      chat = useChat(current.email);
+    });
+  }
+
+  // const ws = new WebSocket(
+  //   'https://projectbesties-backend.herokuapp.com/tinder/chats',
+  // );
+  //
+  // ws.addEventListener('message', function (event) {
+  //   console.log('test');
+  // });
+
+  // ws.onopen = () => {
+  //   console.log('test');
+  // };
 
   if (!current || current === self) {
     return (
@@ -52,6 +87,9 @@ export default function Chat({self}) {
           size={0.06 * HEIGHT}
           style={styles.sendButton}
           onPress={() => {
+            if (message === '') {
+              return;
+            }
             if (chat) {
               const messages = [[self.email, Date.now(), message]];
               updateChat(chat._id, messages);
@@ -122,6 +160,9 @@ export default function Chat({self}) {
         size={0.06 * HEIGHT}
         style={styles.sendButton}
         onPress={() => {
+          if (message === '') {
+            return;
+          }
           let messages = chat.messages;
           messages[messages.length] = [self.email, new Date(), message];
           updateChat(chat._id, messages);

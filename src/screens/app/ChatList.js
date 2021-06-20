@@ -1,15 +1,6 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
 import ChatUserButton from '../../components/ChatUserButton';
 import useUser, {useMatches} from '../../states/UserState';
-import {dim} from '../../lib/Dimensions';
-import React, {useEffect, useState} from 'react';
-import ThemedText from '../../components/ThemedText';
-import useColors from '../../states/ThemeState';
-import Chat from './Chat';
-import ChatUserButtonList from '../../components/ChatUserButtonList';
-
-const HEIGHT = dim.height;
-const WIDTH = dim.width;
+import React from 'react';
 
 export default function ChatList({press}) {
   const matches = useMatches();
