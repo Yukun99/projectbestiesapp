@@ -10,7 +10,7 @@ import auth from '@react-native-firebase/auth';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
-export default function Profile(props) {
+export default function Profile() {
   const colors = useColors();
   const user = useUser();
 
@@ -70,6 +70,7 @@ export default function Profile(props) {
   );
 }
 
+// noinspection JSSuspiciousNameCombination
 const styles = StyleSheet.create({
   container: {
     flex: 1,

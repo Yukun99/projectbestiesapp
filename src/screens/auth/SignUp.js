@@ -3,7 +3,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
 import ThemedTextInput from '../../components/ThemedTextInput';
-import {setUser} from '../../states/UserState';
+import {createUser} from '../../states/UserState';
 import auth from '@react-native-firebase/auth';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
@@ -14,11 +14,11 @@ const WIDTH = dim.width;
 
 export default function SignUp({user, update}) {
   const [name, setName] = useState(undefined);
-  const [email, setEmail] = useState(auth().currentUser.email);
+  const email = auth().currentUser.email;
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
   const [imgUrl, setImgUrl] = useState(null);
-  const [projects, setProjects] = useState([]);
+  const projects = [];
   const colors = useColors();
   const [delay, setDelay] = useState(true);
   const [registered, setRegistered] = useState(false);
@@ -28,13 +28,13 @@ export default function SignUp({user, update}) {
       style={styles.submitButton}
       disabled={true}
       onPress={() => {
-        setUser(name, email, age, year, imgUrl, projects);
+        createUser(name, email, age, year, imgUrl, projects);
       }}
     />
   );
 
   useEffect(() => {
-    const timeout = setTimeout(() => setDelay(false), 2000);
+    const timeout = setTimeout(() => setDelay(false), 3000);
     if (user && user.testResults) {
       update();
     }
@@ -54,7 +54,7 @@ export default function SignUp({user, update}) {
         label={'Submit'}
         style={styles.submitButton}
         onPress={() => {
-          setUser(name, email, age, year, imgUrl, projects);
+          createUser(name, email, age, year, imgUrl, projects);
           setRegistered(true);
         }}
       />

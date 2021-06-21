@@ -1,14 +1,19 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import useColors from '../states/ThemeState';
 import {dim} from '../lib/Dimensions';
 import ThemedText from './ThemedText';
+import useUser from '../states/UserState';
 
 const WIDTH = dim.width;
 const HEIGHT = dim.height;
 
-export default function ChatUserButton({user, press, ...rest}) {
+export default function ChatUserButton({email, press, ...rest}) {
   const colors = useColors();
+  const user = useUser(email);
+  if (!user) {
+    return null;
+  }
 
   return (
     <View>

@@ -1,9 +1,3 @@
-import {
-  setChat,
-  updateChat,
-  useChat,
-  useChatId,
-} from '../../states/UserState';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {dim} from '../../lib/Dimensions';
@@ -14,48 +8,22 @@ import useColors from '../../states/ThemeState';
 import ThemedTextInput from '../../components/ThemedTextInput';
 import {Icon} from 'react-native-elements';
 import ContainButton from '../../components/ContainButton';
-import io from 'socket.io-client';
+import {useChat} from '../../states/ChatState';
+import {createMessage, useMessages} from '../../states/MessageState';
+import useUser from '../../states/UserState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function Chat({self}) {
   const colors = useColors();
-  const [current, setCurrent] = useState(self);
-  let chat = useChat(current.email);
-  const otherid = useChatId(current.email, self.email);
+  const [current, setCurrent] = useState(self.email);
+  const other = useUser(current);
+  const chat = useChat(current);
+  const messages = useMessages(chat._id);
   const [message, setMessage] = useState('');
 
-  function componentDidMount() {
-    //get previous messages
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    chat = useChat(current.email);
-
-    //start socket connections
-    const socket = io(
-      'https://projectbesties-backend.herokuapp.com/tinder/chats',
-    );
-    socket.connect();
-    socket.on('incomingMessage', () => {
-      console.log('test');
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      chat = useChat(current.email);
-    });
-  }
-
-  // const ws = new WebSocket(
-  //   'https://projectbesties-backend.herokuapp.com/tinder/chats',
-  // );
-  //
-  // ws.addEventListener('message', function (event) {
-  //   console.log('test');
-  // });
-
-  // ws.onopen = () => {
-  //   console.log('test');
-  // };
-
-  if (!current || current === self) {
+  if (!other || other.email === self.email) {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -69,12 +37,16 @@ export default function Chat({self}) {
     );
   }
 
-  if (!chat || !chat.messages) {
+  if (!chat) {
+    return null;
+  }
+
+  if (!messages) {
     return (
       <View style={styles.container}>
         <View style={[styles.topBar]}>
-          <ChatUserPicture user={current} />
-          <ThemedText text={current.name} style={styles.title} />
+          <ChatUserPicture user={other} />
+          <ThemedText text={other.name} style={styles.title} />
         </View>
         <ScrollView contentContainerStyle={styles.scrollView} />
         <ThemedTextInput
@@ -88,16 +60,9 @@ export default function Chat({self}) {
           style={styles.sendButton}
           onPress={() => {
             if (message === '') {
-              return;
+              return null;
             }
-            if (chat) {
-              const messages = [[self.email, Date.now(), message]];
-              updateChat(chat._id, messages);
-              updateChat(otherid, messages);
-            } else {
-              const messages = [[self.email, new Date(), message]];
-              setChat(current.email, messages);
-            }
+            createMessage(chat._id, self._id, message);
             setMessage('');
           }}
           content={
@@ -115,35 +80,28 @@ export default function Chat({self}) {
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.topBar,
-          {borderBottomWidth: 1, borderColor: colors.border},
-        ]}>
-        <ChatUserPicture user={current} />
-        <ThemedText text={current.name} style={styles.title} />
+      <View style={[styles.topBar, {borderColor: colors.border}]}>
+        <ChatUserPicture user={other} />
+        <ThemedText text={other.name} style={styles.title} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {chat.messages.map((msg, i) => {
-          const sender = msg[0];
-          if (sender === current.email) {
+        {messages.map((msg, i) => {
+          const sender = msg.senderID;
+          if (sender === self._id) {
             return (
               <View style={styles.messageContainer} key={i}>
-                <ChatUserPicture
-                  style={styles.messageIconLeft}
-                  user={current}
-                />
-                <View style={styles.messageBubbleLeft}>
-                  <ThemedText text={msg[2]} />
+                <ChatUserPicture style={styles.messageIconRight} user={self} />
+                <View style={styles.messageBubbleRight}>
+                  <ThemedText text={msg.message} />
                 </View>
               </View>
             );
           } else {
             return (
               <View style={styles.messageContainer} key={i}>
-                <ChatUserPicture style={styles.messageIconRight} user={self} />
-                <View style={styles.messageBubbleRight}>
-                  <ThemedText text={msg[2]} />
+                <ChatUserPicture style={styles.messageIconLeft} user={other} />
+                <View style={styles.messageBubbleLeft}>
+                  <ThemedText text={msg.message} />
                 </View>
               </View>
             );
@@ -163,10 +121,7 @@ export default function Chat({self}) {
           if (message === '') {
             return;
           }
-          let messages = chat.messages;
-          messages[messages.length] = [self.email, new Date(), message];
-          updateChat(chat._id, messages);
-          updateChat(otherid, messages);
+          createMessage(chat._id, self._id, message);
           setMessage('');
         }}
         content={
@@ -194,6 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 0.01 * HEIGHT,
+    borderBottomWidth: 1,
   },
   scrollView: {
     width: WIDTH,

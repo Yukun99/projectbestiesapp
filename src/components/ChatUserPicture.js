@@ -4,7 +4,6 @@ import useColors from '../states/ThemeState';
 import React from 'react';
 
 const HEIGHT = dim.height;
-const WIDTH = dim.width;
 
 export default function ChatUserPicture({user, style}) {
   const colors = useColors();

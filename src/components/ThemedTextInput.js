@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput} from 'react-native';
+import {StyleSheet, TextInput} from 'react-native';
 import useColors from '../states/ThemeState';
 
 export default function ThemedTextInput({label, value, style, ...rest}) {
@@ -8,14 +8,13 @@ export default function ThemedTextInput({label, value, style, ...rest}) {
     <TextInput
       value={value}
       style={[
+        style,
+        styles.textInput,
         {
           backgroundColor: colors.background,
           borderColor: colors.border,
-          borderWidth: 2.5,
-          borderRadius: 5,
           color: colors.text,
         },
-        style,
       ]}
       numberOfLines={1}
       placeholder={label}
@@ -24,3 +23,10 @@ export default function ThemedTextInput({label, value, style, ...rest}) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  textInput: {
+    borderWidth: 2.5,
+    borderRadius: 5,
+  },
+});

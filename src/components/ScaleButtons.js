@@ -1,15 +1,13 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {RadioButton, Text} from 'react-native-paper';
-import RadioGroup from 'react-native-radio-button-group';
+import {RadioButton} from 'react-native-paper';
 import {dim} from '../lib/Dimensions';
 import useColors from '../states/ThemeState';
 import ThemedText from './ThemedText';
 
-const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function ScaleButtons({answer, setAnswer, ...rest}) {
+export default function ScaleButtons({answer, setAnswer}) {
   const colors = useColors();
   return (
     <View style={{backgroundColor: colors.background}}>

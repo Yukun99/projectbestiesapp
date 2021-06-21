@@ -1,20 +1,25 @@
 import ChatUserButton from '../../components/ChatUserButton';
-import useUser, {useMatches} from '../../states/UserState';
+import useChats from '../../states/ChatState';
 import React from 'react';
+import auth from '@react-native-firebase/auth';
 
 export default function ChatList({press}) {
-  const matches = useMatches();
-  const self = useUser();
+  const chats = useChats();
 
-  if (!self || !matches || !Array.isArray(matches)) {
+  // waiting for data, display nothing
+  if (!chats) {
     return null;
   }
-  return matches.map(user => {
-    if (user === self) {
-      return null;
-    }
-    return (
-      <ChatUserButton user={user} press={() => press(user)} key={user._id} />
-    );
+
+  const matches = chats.map(chat => {
+    const members = chat.members;
+    return members.filter(item => {
+      return item !== auth().currentUser.email;
+    })[0];
+  });
+
+  // data found, display it
+  return matches.map((user, i) => {
+    return <ChatUserButton user={user} press={() => press(user)} key={i} />;
   });
 }

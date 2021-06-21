@@ -6,12 +6,14 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Profile from '../screens/app/Profile';
 import Swipe from '../screens/app/Swipe';
 import Chat from '../screens/app/Chat';
+import auth from '@react-native-firebase/auth';
 
+// ignores stupid warning from rEaNiMaTeD 2
 LogBox.ignoreLogs(['Reanimated 2']);
 
 const Tab = createMaterialTopTabNavigator();
 
-function Icon(route, focused) {
+function Icon(route) {
   if (route.name === 'Swipe') {
     return (
       <Image style={styles.icon} source={require('../../assets/icon.png')} />
@@ -34,7 +36,7 @@ function Icon(route, focused) {
 }
 
 export default function AppStack() {
-  const user = useUser();
+  const user = useUser(auth().currentUser.email);
   const [registered, setRegistered] = useState(false);
   if (!registered) {
     // before login
@@ -53,9 +55,9 @@ export default function AppStack() {
     return (
       <Tab.Navigator
         initialRouteName={'Swipe'}
-        screenOptions={({route, focused}) => ({
+        screenOptions={({route}) => ({
           tabBarIcon: () => {
-            return Icon(route, focused);
+            return Icon(route);
           },
         })}
         tabBarOptions={{

@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
-import ThemedTextInput from '../../components/ThemedTextInput';
-import useUser, {setUser, updateUser} from '../../states/UserState';
-import auth from '@react-native-firebase/auth';
+import useUser, {updateUser} from '../../states/UserState';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
 import ScaleButtons from '../../components/ScaleButtons';
@@ -15,10 +13,6 @@ const WIDTH = dim.width;
 export default function PersonalityTest({update}) {
   const colors = useColors();
   const user = useUser();
-  const [logic, setLogic] = useState(0);
-  const [organ, setOrgan] = useState(undefined);
-  const [support, setSupport] = useState(undefined);
-  const [bigPic, setBigPic] = useState(undefined);
   const [q1, setQ1] = useState(undefined);
   const [q2, setQ2] = useState(undefined);
   const [q3, setQ3] = useState(undefined);
@@ -50,28 +44,23 @@ export default function PersonalityTest({update}) {
         label={'Submit'}
         style={styles.submitButton}
         onPress={() => {
-          const logicScore = q1 + q5 + q9;
-          setLogic(logicScore);
-          setOrgan(q2 + q6 + q10);
-          setSupport(q3 + q7 + q11);
-          setBigPic(q4 + q8 + q12);
-
           const scores = [
+            // logic
             q1 + q5 + q9,
+            // organisation
             q2 + q6 + q10,
+            // supportive
             q3 + q7 + q11,
+            // big picture
             q4 + q8 + q12,
           ];
           let max = scores[0];
           let category = 0;
-          console.log(scores);
 
           for (let i = 0; i < 4; i++) {
-            console.log('gay');
             if (scores[i] > max) {
               max = scores[i];
               category = i;
-              console.log(category);
             }
           }
           let workStyle = '';
@@ -92,8 +81,6 @@ export default function PersonalityTest({update}) {
             default:
               break;
           }
-
-          console.log('hi ' + workStyle);
 
           updateUser(user._id, {testResults: workStyle});
           update();

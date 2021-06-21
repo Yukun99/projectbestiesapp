@@ -9,7 +9,6 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 // setting up google auth
 import auth from '@react-native-firebase/auth';
@@ -81,7 +80,7 @@ const App: () => Node = () => {
   );
 };
 
-// optional StyleSheet for future app styling
+// StyleSheet for future app styling
 const styles = StyleSheet.create({});
 
 export default App;

@@ -13,15 +13,16 @@ import ThemedText from '../../components/ThemedText';
 import useUser, {updateUser, useUsers} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
-import ThemedButton from '../../components/ThemedButton';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
+import {createChat} from '../../states/ChatState';
+import auth from '@react-native-firebase/auth';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function Swipe() {
-  const self = useUser();
+  const self = useUser(auth().currentUser.email);
   const users = useUsers().reverse();
 
   // for info button to show user info
@@ -77,7 +78,7 @@ export default function Swipe() {
 
   // initialise PanResponder for swiping
   const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (evt, gestureState) => true,
+    onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (evt, gestureState) => {
       position.setValue({x: gestureState.dx, y: gestureState.dy});
     },
@@ -89,6 +90,9 @@ export default function Swipe() {
         const swiped = self.swiped;
         swiped[swiped.length] = users[index].email;
         updateUser(self._id, {matches: matches, swiped: swiped});
+        if (users[index].matches && users[index].matches.includes(self.email)) {
+          createChat(users[index].email);
+        }
         Animated.spring(position, {
           toValue: {x: WIDTH + 100, y: gestureState.dy},
           useNativeDriver: true,

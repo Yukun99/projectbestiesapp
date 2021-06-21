@@ -4,5 +4,5 @@ import useColors from '../states/ThemeState';
 
 export default function ThemedText({text, style}) {
   const colors = useColors();
-  return <Text style={[{color: colors.text}, style]}>{text}</Text>;
+  return <Text style={[style, {color: colors.text}]}>{text}</Text>;
 }
