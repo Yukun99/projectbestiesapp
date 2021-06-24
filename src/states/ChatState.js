@@ -88,6 +88,10 @@ function useChats() {
     );
   }, [user]);
 
+  if (!chats) {
+    return undefined;
+  }
+
   return chats;
 }
 

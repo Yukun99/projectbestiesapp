@@ -7,7 +7,7 @@ export default function ChatList({press}) {
   const chats = useChats();
 
   // waiting for data, display nothing
-  if (!chats) {
+  if (!chats || chats.length === 0) {
     return null;
   }
 

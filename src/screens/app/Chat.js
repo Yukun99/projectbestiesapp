@@ -20,7 +20,7 @@ export default function Chat({self}) {
   const [current, setCurrent] = useState(self.email);
   const other = useUser(current);
   const chat = useChat(current);
-  const messages = useMessages(chat._id);
+  const messages = useMessages(chat);
   const [message, setMessage] = useState('');
 
   if (!other || other.email === self.email) {

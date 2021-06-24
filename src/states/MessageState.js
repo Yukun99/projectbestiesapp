@@ -46,10 +46,14 @@ export function createMessage(chatID, senderID, message) {
  * @param chatId Chat ID to find messages for.
  * @returns {*|[]|undefined} Array of messages with specified chat ID.
  */
-export function useMessages(chatId) {
+export function useMessages(chat) {
+  let chatId = '';
+  if (chat) {
+    chatId = chat._id;
+  }
   console.log('Fetching messages in chat: ' + chatId + '...');
   const user = auth().currentUser.email;
-  const [messages, setMessages] = useState(undefined);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
