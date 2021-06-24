@@ -48,7 +48,7 @@ export function createMessage(chatID, senderID, message) {
  */
 export function useMessages(chat) {
   let chatId = '';
-  if (chat) {
+  if (chat && !Array.isArray(chat)) {
     chatId = chat._id;
   }
   console.log('Fetching messages in chat: ' + chatId + '...');

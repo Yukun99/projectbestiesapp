@@ -5,6 +5,7 @@ import {dim} from '../lib/Dimensions';
 import ThemedText from './ThemedText';
 import useUser from '../states/UserState';
 import {useMessages} from '../states/MessageState';
+import {useChat} from '../states/ChatState';
 
 const WIDTH = dim.width;
 const HEIGHT = dim.height;
@@ -12,8 +13,10 @@ const HEIGHT = dim.height;
 export default function ChatUserButton({email, press, ...rest}) {
   const colors = useColors();
   const user = useUser(email);
+  const chat = useChat(email);
+  const messages = useMessages(chat);
 
-  if (!user) {
+  if (!user || !chat || !messages || messages.length === 0) {
     return null;
   }
 
@@ -61,7 +64,7 @@ export default function ChatUserButton({email, press, ...rest}) {
             fontSize: 0.0175 * HEIGHT,
             width: 0.35 * HEIGHT,
           }}
-          text={'This is a dummy message. A A A A A A A A A A A A H E L P'}
+          text={messages[messages.length - 1].message}
         />
       </TouchableOpacity>
     </View>

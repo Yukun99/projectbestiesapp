@@ -20,6 +20,6 @@ export default function ChatList({press}) {
 
   // data found, display it
   return matches.map((user, i) => {
-    return <ChatUserButton user={user} press={() => press(user)} key={i} />;
+    return <ChatUserButton email={user} press={() => press(user)} key={i} />;
   });
 }
