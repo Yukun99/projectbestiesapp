@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {dim} from '../../lib/Dimensions';
 import ChatUserPicture from '../../components/ChatUserPicture';
 import ThemedText from '../../components/ThemedText';
@@ -11,6 +11,7 @@ import ContainButton from '../../components/ContainButton';
 import {useChat} from '../../states/ChatState';
 import {createMessage, useMessages} from '../../states/MessageState';
 import useUser from '../../states/UserState';
+import {io} from 'socket.io-client';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -20,8 +21,22 @@ export default function Chat({self}) {
   const [current, setCurrent] = useState(self.email);
   const other = useUser(current);
   const chat = useChat(current);
-  const messages = useMessages(chat);
+  let messages = useMessages(chat);
   const [message, setMessage] = useState('');
+  const socket = useRef();
+
+  console.log(socket);
+
+  useEffect(() => {
+    socket.current = io('https://projectbesties-backend.herokuapp.com');
+    // socket.current.emit('newUser', self._id);
+    // socket.current.on('getUsers', users => {
+    //   console.log('users: ' + users);
+    // });
+    socket.current.on('getMessage', data => {
+      console.log('hi');
+    });
+  }, [chat._id, messages, self, socket]);
 
   if (!other || other.email === self.email) {
     return (
@@ -36,6 +51,19 @@ export default function Chat({self}) {
       </View>
     );
   }
+
+  const sendMessage = () => {
+    if (message === '') {
+      return null;
+    }
+    createMessage(chat._id, self._id, message);
+    setMessage('');
+    socket.current.emit('getMessage', {
+      senderId: self._id,
+      recipientId: other._id,
+      msg: message,
+    });
+  };
 
   if (!chat) {
     return null;
@@ -64,13 +92,7 @@ export default function Chat({self}) {
         <ContainButton
           size={0.06 * HEIGHT}
           style={styles.sendButton}
-          onPress={() => {
-            if (message === '') {
-              return null;
-            }
-            createMessage(chat._id, self._id, message);
-            setMessage('');
-          }}
+          onPress={sendMessage}
           content={
             <Icon
               name={'paper-plane-outline'}
@@ -107,13 +129,7 @@ export default function Chat({self}) {
         <ContainButton
           size={0.06 * HEIGHT}
           style={styles.sendButton}
-          onPress={() => {
-            if (message === '') {
-              return null;
-            }
-            createMessage(chat._id, self._id, message);
-            setMessage('');
-          }}
+          onPress={sendMessage}
           content={
             <Icon
               name={'paper-plane-outline'}
