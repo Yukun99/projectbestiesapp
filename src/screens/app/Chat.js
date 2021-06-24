@@ -45,10 +45,59 @@ export default function Chat({self}) {
     return (
       <View style={styles.container}>
         <View style={[styles.topBar]}>
-          <ChatUserPicture user={other} />
+          <ChatUserPicture user={other} self={false} />
           <ThemedText text={other.name} style={styles.title} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollView} />
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <ThemedText
+            text={'Loading messages, please wait...'}
+            style={[styles.noMessages]}
+            color={colors.border}
+          />
+        </ScrollView>
+        <ThemedTextInput
+          label={'Type Message Here...'}
+          value={message}
+          onChangeText={data => setMessage(data)}
+          style={styles.inputBox}
+        />
+        <ContainButton
+          size={0.06 * HEIGHT}
+          style={styles.sendButton}
+          onPress={() => {
+            if (message === '') {
+              return null;
+            }
+            createMessage(chat._id, self._id, message);
+            setMessage('');
+          }}
+          content={
+            <Icon
+              name={'paper-plane-outline'}
+              type={'ionicon'}
+              size={0.035 * HEIGHT}
+              color={'#FF69B4'}
+            />
+          }
+        />
+      </View>
+    );
+  }
+
+  if (messages.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.topBar]}>
+          <ChatUserPicture user={other} self={false} />
+          <ThemedText text={other.name} style={styles.title} />
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <ThemedText
+            text={'No messages yet. Send something to start the conversation!'}
+            style={[styles.noMessages]}
+            color={colors.border}
+          />
+        </ScrollView>
         <ThemedTextInput
           label={'Type Message Here...'}
           value={message}
@@ -81,7 +130,7 @@ export default function Chat({self}) {
   return (
     <View style={styles.container}>
       <View style={[styles.topBar, {borderColor: colors.border}]}>
-        <ChatUserPicture user={other} />
+        <ChatUserPicture user={other} self={false} />
         <ThemedText text={other.name} style={styles.title} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -90,7 +139,11 @@ export default function Chat({self}) {
           if (sender === self._id) {
             return (
               <View style={styles.messageContainer} key={i}>
-                <ChatUserPicture style={styles.messageIconRight} user={self} />
+                <ChatUserPicture
+                  style={styles.messageIconRight}
+                  user={self}
+                  self={true}
+                />
                 <View style={styles.messageBubbleRight}>
                   <ThemedText text={msg.message} />
                 </View>
@@ -99,7 +152,11 @@ export default function Chat({self}) {
           } else {
             return (
               <View style={styles.messageContainer} key={i}>
-                <ChatUserPicture style={styles.messageIconLeft} user={other} />
+                <ChatUserPicture
+                  style={styles.messageIconLeft}
+                  user={other}
+                  self={false}
+                />
                 <View style={styles.messageBubbleLeft}>
                   <ThemedText text={msg.message} />
                 </View>
@@ -159,6 +216,11 @@ const styles = StyleSheet.create({
     fontSize: HEIGHT * 0.025,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  noMessages: {
+    fontSize: HEIGHT * 0.0175,
+    textAlign: 'center',
+    paddingTop: HEIGHT * 0.02,
   },
   list: {
     fontSize: HEIGHT * 0.05,

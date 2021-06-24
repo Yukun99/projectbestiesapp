@@ -14,9 +14,10 @@ import useUser, {updateUser, useUsers} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import ContainButton from '../../components/ContainButton';
-import {Icon} from 'react-native-elements';
+import {Icon, Theme} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
 import auth from '@react-native-firebase/auth';
+import useColors from '../../states/ThemeState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -24,6 +25,7 @@ const WIDTH = dim.width;
 export default function Swipe() {
   const self = useUser(auth().currentUser.email);
   const users = useUsers().reverse();
+  const colors = useColors();
 
   // for info button to show user info
   const [info, setInfo] = useState(undefined);
@@ -124,9 +126,22 @@ export default function Swipe() {
     return null;
   }
 
+  users[users.length] = 'end';
+
   if (!info) {
     return users
       .map((user, i) => {
+        if (user === 'end') {
+          return (
+            <View style={[styles.container, styles.empty]} key={i}>
+              <ThemedText
+                text={"You've swiped them all!"}
+                style={styles.emptyText}
+                color={colors.border}
+              />
+            </View>
+          );
+        }
         if (i < index) {
           return null;
         } else if (i === index) {
@@ -223,21 +238,12 @@ export default function Swipe() {
       })
       .reverse();
   } else {
-    console.log('im here bitch');
     return (
       <View style={styles.infoContainer}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
           <View style={styles.header}>
             <ThemedText text={info.name} style={styles.infoName} />
-            {/*<ThemedButton*/}
-            {/*  label={'Submit'}*/}
-            {/*  style={styles.submitButton}*/}
-            {/*  onPress={() => {*/}
-            {/*    setInfo(undefined);*/}
-            {/*    console.log('lesbian');*/}
-            {/*  }}*/}
-            {/*/>*/}
             <ContainButton
               size={0.09 * HEIGHT}
               style={styles.backButton}
@@ -278,6 +284,13 @@ const styles = StyleSheet.create({
     height: HEIGHT,
     width: WIDTH,
     position: 'absolute',
+  },
+  empty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 0.025 * HEIGHT,
   },
   swipeCard: {
     margin: 5,

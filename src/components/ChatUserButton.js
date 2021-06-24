@@ -4,6 +4,7 @@ import useColors from '../states/ThemeState';
 import {dim} from '../lib/Dimensions';
 import ThemedText from './ThemedText';
 import useUser from '../states/UserState';
+import {useMessages} from '../states/MessageState';
 
 const WIDTH = dim.width;
 const HEIGHT = dim.height;
@@ -11,6 +12,7 @@ const HEIGHT = dim.height;
 export default function ChatUserButton({email, press, ...rest}) {
   const colors = useColors();
   const user = useUser(email);
+
   if (!user) {
     return null;
   }

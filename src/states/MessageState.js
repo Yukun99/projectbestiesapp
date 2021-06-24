@@ -49,7 +49,7 @@ export function createMessage(chatID, senderID, message) {
 export function useMessages(chatId) {
   console.log('Fetching messages in chat: ' + chatId + '...');
   const user = auth().currentUser.email;
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(undefined);
 
   useEffect(() => {
     async function fetchData() {
