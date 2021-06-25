@@ -11,7 +11,7 @@ import ContainButton from '../../components/ContainButton';
 import {useChat} from '../../states/ChatState';
 import {createMessage, useMessages} from '../../states/MessageState';
 import useUser from '../../states/UserState';
-import {io} from 'socket.io-client';
+import io from 'socket.io-client';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -23,20 +23,28 @@ export default function Chat({self}) {
   const chat = useChat(current);
   let messages = useMessages(chat);
   const [message, setMessage] = useState('');
-  const socket = useRef();
+  const socket = io('http://localhost:8001');
+
+  // console.log(socket.current);
+  socket.on('connect', () => {
+    console.log('halsdl;kwl;kqg');
+  });
+
+  socket.on('example', data => {
+    console.log(data);
+  });
 
   console.log(socket);
 
   useEffect(() => {
-    socket.current = io('https://projectbesties-backend.herokuapp.com');
     // socket.current.emit('newUser', self._id);
     // socket.current.on('getUsers', users => {
     //   console.log('users: ' + users);
     // });
-    socket.current.on('getMessage', data => {
-      console.log('hi');
+    socket.on('getMessage', data => {
+      console.log('hiasdhhashfhqwkhgqjhgioqwgyhqgyq');
     });
-  }, [chat._id, messages, self, socket]);
+  }, []);
 
   if (!other || other.email === self.email) {
     return (
@@ -58,7 +66,7 @@ export default function Chat({self}) {
     }
     createMessage(chat._id, self._id, message);
     setMessage('');
-    socket.current.emit('getMessage', {
+    socket.current.emit('newMessage', {
       senderId: self._id,
       recipientId: other._id,
       msg: message,

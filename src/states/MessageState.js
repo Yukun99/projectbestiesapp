@@ -28,7 +28,7 @@ export function createMessage(chatID, senderID, message) {
         console.log(
           'Created new message in chat: ' +
             chatID +
-            'from sender: ' +
+            ' from sender: ' +
             senderID +
             ' successfully.',
         );
