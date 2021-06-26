@@ -3,7 +3,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {dim} from '../../lib/Dimensions';
 import ChatUserPicture from '../../components/ChatUserPicture';
 import ThemedText from '../../components/ThemedText';
-import ChatList from './ChatList';
 import useColors from '../../states/ThemeState';
 import ThemedTextInput from '../../components/ThemedTextInput';
 import {Icon} from 'react-native-elements';
@@ -16,64 +15,66 @@ import io from 'socket.io-client';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function Chat({self}) {
+export default function Chat({current, setCurrent}) {
   const colors = useColors();
-  const [current, setCurrent] = useState(self.email);
+  const self = useUser();
   const other = useUser(current);
   const chat = useChat(current);
-  let messages = useMessages(chat);
+  const messages = useMessages(chat);
+  const [incMessage, setIncMessage] = useState(null);
   const [message, setMessage] = useState('');
-  const socket = io('http://localhost:8001');
-
-  // console.log(socket.current);
-  socket.on('connect', () => {
-    console.log('halsdl;kwl;kqg');
-  });
-
-  socket.on('example', data => {
-    console.log(data);
-  });
-
-  console.log(socket);
+  const scrollViewRef = useRef();
+  const socket = io('http://projectbesties-backend.herokuapp.com');
 
   useEffect(() => {
-    // socket.current.emit('newUser', self._id);
-    // socket.current.on('getUsers', users => {
-    //   console.log('users: ' + users);
-    // });
-    socket.on('getMessage', data => {
-      console.log('hiasdhhashfhqwkhgqjhgioqwgyhqgyq');
+    socket.on('connect', () => {
+      console.log('Socket connected! Sending our information.');
+      if (self) {
+        socket.emit('addUser', {
+          userID: self._id,
+        });
+      }
+      console.log('Information successfully sent.');
     });
-  }, []);
+  });
 
-  if (!other || other.email === self.email) {
-    return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <ThemedText
-            style={[styles.list, {borderBottomColor: colors.border}]}
-            text={'Your Matches'}
-          />
-          <ChatList press={setCurrent} />
-        </ScrollView>
-      </View>
-    );
-  }
+  socket.on('newMessage', ({message}) => {
+    console.log('New message received with contents: ' + message);
+    const newMessage = {
+      message: message,
+      self: false,
+    };
+    setIncMessage(newMessage);
+    console.log('New message successfully displayed.');
+  });
+
+  useEffect(() => {
+    if (incMessage) {
+      messages.push(incMessage);
+      setIncMessage(null);
+    }
+  }, [incMessage, messages]);
 
   const sendMessage = () => {
     if (message === '') {
       return null;
     }
     createMessage(chat._id, self._id, message);
-    setMessage('');
-    socket.current.emit('newMessage', {
-      senderId: self._id,
+    console.log('New message created with contents: ' + message);
+    const newMessage = {
+      message: message,
+      self: true,
+    };
+    messages.push(newMessage);
+    console.log('New message successfully displayed.');
+    socket.emit('newMessage', {
       recipientId: other._id,
-      msg: message,
+      message: message,
     });
+    setMessage('');
   };
 
-  if (!chat) {
+  if (!other || !self || !chat) {
     return null;
   }
 
@@ -84,7 +85,14 @@ export default function Chat({self}) {
           <ChatUserPicture user={other} self={false} />
           <ThemedText text={other.name} style={styles.title} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          ref={scrollViewRef}
+          onContentSizeChange={() => {
+            scrollViewRef.current.scrollToEnd({
+              animated: true,
+            });
+          }}>
           <ThemedText
             text={'Loading messages, please wait...'}
             style={[styles.noMessages]}
@@ -121,7 +129,14 @@ export default function Chat({self}) {
           <ChatUserPicture user={other} self={false} />
           <ThemedText text={other.name} style={styles.title} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          ref={scrollViewRef}
+          onContentSizeChange={() => {
+            scrollViewRef.current.scrollToEnd({
+              animated: true,
+            });
+          }}>
           <ThemedText
             text={'No messages yet. Send something to start the conversation!'}
             style={[styles.noMessages]}
@@ -157,10 +172,19 @@ export default function Chat({self}) {
         <ChatUserPicture user={other} self={false} />
         <ThemedText text={other.name} style={styles.title} />
       </View>
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <ScrollView
+        ref={scrollViewRef}
+        onContentSizeChange={() => {
+          scrollViewRef.current.scrollToEnd({
+            animated: true,
+          });
+        }}
+        contentContainerStyle={styles.scrollView}>
         {messages.map((msg, i) => {
-          const sender = msg.senderID;
-          if (sender === self._id) {
+          if (
+            (msg.senderID && msg.senderID === self._id) ||
+            (msg.self && msg.self === true)
+          ) {
             return (
               <View style={styles.messageContainer} key={i}>
                 <ChatUserPicture
@@ -198,13 +222,7 @@ export default function Chat({self}) {
       <ContainButton
         size={0.06 * HEIGHT}
         style={styles.sendButton}
-        onPress={() => {
-          if (message === '') {
-            return;
-          }
-          createMessage(chat._id, self._id, message);
-          setMessage('');
-        }}
+        onPress={sendMessage}
         content={
           <Icon
             name={'paper-plane-outline'}
@@ -231,6 +249,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 0.01 * HEIGHT,
     borderBottomWidth: 1,
+  },
+  backButton: {
+    zIndex: 1,
+    left: 0.01 * HEIGHT,
+    top: 0.01 * HEIGHT,
+    position: 'absolute',
   },
   scrollView: {
     width: WIDTH,

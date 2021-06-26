@@ -44,7 +44,7 @@ export function createMessage(chatID, senderID, message) {
  * Returns empty array if waiting for response.
  * Returns undefined if chat ID is undefined.
  * @param chatId Chat ID to find messages for.
- * @returns {*|[]|undefined} Array of messages with specified chat ID.
+ * @returns {*|[]} Array of messages with specified chat ID.
  */
 export function useMessages(chat) {
   let chatId = '';
@@ -53,7 +53,7 @@ export function useMessages(chat) {
   }
   console.log('Fetching messages in chat: ' + chatId + '...');
   const user = auth().currentUser.email;
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(undefined);
 
   useEffect(() => {
     async function fetchData() {
@@ -70,10 +70,6 @@ export function useMessages(chat) {
       },
     );
   }, [user, chatId]);
-
-  if (!chatId) {
-    return undefined;
-  }
 
   return messages;
 }

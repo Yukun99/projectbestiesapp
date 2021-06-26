@@ -5,7 +5,7 @@ import SignUp from '../screens/auth/SignUp';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Profile from '../screens/app/Profile';
 import Swipe from '../screens/app/Swipe';
-import Chat from '../screens/app/Chat';
+import ChatList from '../screens/app/ChatList';
 import auth from '@react-native-firebase/auth';
 
 // ignores stupid warning from rEaNiMaTeD 2
@@ -66,7 +66,7 @@ export default function AppStack() {
         }}>
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name="Swipe" component={Swipe} />
-        <Tab.Screen name="Chat" children={() => <Chat self={user} />} />
+        <Tab.Screen name="Chat" component={ChatList} />
       </Tab.Navigator>
     );
   }

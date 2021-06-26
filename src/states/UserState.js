@@ -33,7 +33,8 @@ export function createUser(name, email, age, year, imgUrl, projects) {
 }
 
 /**
- * Fetch user with specified email. Returns current if email is undefined.
+ * Fetch user with specified email.
+ * Returns current if email is undefined.
  * Returns undefined if waiting for response.
  * @param email Email to find user for.
  * @returns {*|undefined} User with specified email.

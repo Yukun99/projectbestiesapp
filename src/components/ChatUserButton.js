@@ -10,7 +10,7 @@ import {useChat} from '../states/ChatState';
 const WIDTH = dim.width;
 const HEIGHT = dim.height;
 
-export default function ChatUserButton({email, press, ...rest}) {
+export default function ChatUserButton({email, ...rest}) {
   const colors = useColors();
   const user = useUser(email);
   const chat = useChat(email);
@@ -30,7 +30,6 @@ export default function ChatUserButton({email, press, ...rest}) {
           height: 0.15 * HEIGHT,
           width: WIDTH,
         }}
-        onPress={press}
         {...rest}>
         <Image
           source={{
