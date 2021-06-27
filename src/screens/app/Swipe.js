@@ -18,6 +18,7 @@ import {Icon, Theme} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
 import auth from '@react-native-firebase/auth';
 import useColors from '../../states/ThemeState';
+import { useColorScheme } from "react-native-appearance";
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -26,6 +27,7 @@ export default function Swipe() {
   const self = useUser(auth().currentUser.email);
   const users = useUsers().reverse();
   const colors = useColors();
+  const scheme = useColorScheme();
 
   // for info button to show user info
   const [info, setInfo] = useState(undefined);
@@ -190,10 +192,11 @@ export default function Swipe() {
                   start={{x: 0, y: 1}}
                   end={{x: 0, y: 0}}
                   style={styles.textContainer}>
-                  <ThemedText text={user.name} style={styles.nameText} />
+                  <ThemedText text={user.name} style={styles.nameText} color={'white'} />
                   <ThemedText
                     text={'Year ' + user.year}
                     style={styles.yearText}
+                    color={'white'}
                   />
                 </LinearGradient>
               </View>
@@ -225,10 +228,11 @@ export default function Swipe() {
                   start={{x: 0, y: 1}}
                   end={{x: 0, y: 0}}
                   style={styles.textContainer}>
-                  <ThemedText text={user.name} style={styles.nameText} />
+                  <ThemedText text={user.name} style={styles.nameText} color={'white'} />
                   <ThemedText
                     text={'Year ' + user.year}
                     style={styles.yearText}
+                    color={'white'}
                   />
                 </LinearGradient>
               </View>
