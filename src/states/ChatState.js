@@ -92,6 +92,9 @@ function useChats() {
     return undefined;
   }
 
+  if (!chats) {
+    return undefined;
+  }
   return chats;
 }
 
