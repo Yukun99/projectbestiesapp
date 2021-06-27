@@ -373,11 +373,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   infoName: {
-    marginTop: 12,
-    fontSize: HEIGHT * 0.05,
+    marginTop: 0.015 * HEIGHT,
+    fontSize: 0.05 * HEIGHT,
     fontWeight: 'bold',
-    marginLeft: 40,
+    marginLeft: 0.05 * HEIGHT,
     alignSelf: 'flex-start',
+    paddingBottom: 0.02 * HEIGHT,
   },
   infoImage: {
     // justifyContent: 'center',
@@ -387,14 +388,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   infoUser: {
-    marginLeft: 40,
-    marginTop: 10,
-    fontSize: 15,
+    marginLeft: 0.05 * HEIGHT,
+    marginTop: 0.01 * HEIGHT,
+    fontSize: 0.0375 * WIDTH,
     alignSelf: 'flex-start',
+    paddingBottom: 0.02 * HEIGHT,
   },
   infoTitle: {
-    marginLeft: 40,
-    marginTop: 10,
+    marginLeft: 0.05 * HEIGHT,
+    marginTop: 0.01 * HEIGHT,
     fontSize: 0.05 * WIDTH,
     alignSelf: 'flex-start',
     fontWeight: 'bold',
@@ -408,11 +410,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   backButton: {
-    // height: 30,
-    // width: 30
     backgroundColor: 'pink',
-    // alignSelf: 'flex-end'
     marginLeft: 0.25 * WIDTH,
     marginTop: -0.04 * HEIGHT,
+    right: 0.05 * HEIGHT,
+    position: 'absolute',
   },
 });

@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   inputBox: {
     margin: 0,
     paddingLeft: 10,
-    width: '100%',
+    width: WIDTH,
     bottom: 0,
     borderTopWidth: 1,
     borderBottomWidth: 0,
