@@ -14,11 +14,10 @@ import useUser, {updateUser, useUsers} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import ContainButton from '../../components/ContainButton';
-import {Icon, Theme} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
 import auth from '@react-native-firebase/auth';
 import useColors from '../../states/ThemeState';
-import { useColorScheme } from "react-native-appearance";
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -27,7 +26,6 @@ export default function Swipe() {
   const self = useUser(auth().currentUser.email);
   const users = useUsers().reverse();
   const colors = useColors();
-  const scheme = useColorScheme();
 
   // for info button to show user info
   const [info, setInfo] = useState(undefined);
@@ -192,7 +190,11 @@ export default function Swipe() {
                   start={{x: 0, y: 1}}
                   end={{x: 0, y: 0}}
                   style={styles.textContainer}>
-                  <ThemedText text={user.name} style={styles.nameText} color={'white'} />
+                  <ThemedText
+                    text={user.name}
+                    style={styles.nameText}
+                    color={'white'}
+                  />
                   <ThemedText
                     text={'Year ' + user.year}
                     style={styles.yearText}
@@ -228,7 +230,11 @@ export default function Swipe() {
                   start={{x: 0, y: 1}}
                   end={{x: 0, y: 0}}
                   style={styles.textContainer}>
-                  <ThemedText text={user.name} style={styles.nameText} color={'white'} />
+                  <ThemedText
+                    text={user.name}
+                    style={styles.nameText}
+                    color={'white'}
+                  />
                   <ThemedText
                     text={'Year ' + user.year}
                     style={styles.yearText}
@@ -245,27 +251,27 @@ export default function Swipe() {
     return (
       <View style={styles.infoContainer}>
         <ScrollView contentContainerStyle={styles.scrollView}>
+          <ContainButton
+            size={0.09 * HEIGHT}
+            style={styles.backButton}
+            content={
+              <Icon
+                name={'arrowup'}
+                type={'antdesign'}
+                size={30}
+                color={'white'}
+              />
+            }
+            backgroundColor={'#FF69B4FF'}
+            borderColor={'#FF69B4FF'}
+            onPress={() => {
+              setInfo(undefined);
+              console.log('lesbian');
+            }}
+          />
           <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
           <View style={styles.header}>
             <ThemedText text={info.name} style={styles.infoName} />
-            <ContainButton
-              size={0.09 * HEIGHT}
-              style={styles.backButton}
-              content={
-                <Icon
-                  name={'arrowup'}
-                  type={'antdesign'}
-                  size={30}
-                  color={'white'}
-                />
-              }
-              backgroundColor={'#FF69B4FF'}
-              borderColor={'#FF69B4FF'}
-              onPress={() => {
-                setInfo(undefined);
-                console.log('lesbian');
-              }}
-            />
           </View>
           <ThemedText text={'Age'} style={styles.infoTitle} />
           <ThemedText text={info.age} style={styles.infoUser} />
@@ -380,7 +386,7 @@ const styles = StyleSheet.create({
     marginTop: 0.015 * HEIGHT,
     fontSize: 0.05 * HEIGHT,
     fontWeight: 'bold',
-    marginLeft: 0.05 * HEIGHT,
+    marginLeft: 0.05 * WIDTH,
     alignSelf: 'flex-start',
     paddingBottom: 0.02 * HEIGHT,
   },
@@ -392,14 +398,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   infoUser: {
-    marginLeft: 0.05 * HEIGHT,
+    marginLeft: 0.05 * WIDTH,
     marginTop: 0.01 * HEIGHT,
     fontSize: 0.0375 * WIDTH,
     alignSelf: 'flex-start',
     paddingBottom: 0.02 * HEIGHT,
   },
   infoTitle: {
-    marginLeft: 0.05 * HEIGHT,
+    marginLeft: 0.05 * WIDTH,
     marginTop: 0.01 * HEIGHT,
     fontSize: 0.05 * WIDTH,
     alignSelf: 'flex-start',
@@ -417,7 +423,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     marginLeft: 0.25 * WIDTH,
     marginTop: -0.04 * HEIGHT,
-    right: 0.05 * HEIGHT,
+    right: 0.05 * WIDTH,
+    zIndex: 10,
     position: 'absolute',
+    top: 0.75 * HEIGHT,
   },
 });
