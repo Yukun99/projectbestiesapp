@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import useColors from '../../states/ThemeState';
 import ThemedText from '../../components/ThemedText';
-import useUser from '../../states/UserState';
+import useUser, {updateUser} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
 import EditProfile from './EditProfile';
+import ThemedBlankImage from '../../components/ThemedBlankImage';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -15,6 +16,21 @@ export default function Profile() {
   const colors = useColors();
   const user = useUser();
   const [edit, setEdit] = useState(false);
+  const [newuser, setNewuser] = useState(null);
+  const [displayed, setDisplayed] = useState(null);
+
+  useEffect(() => {
+    if (user && !newuser) {
+      setDisplayed(user);
+    }
+  }, [newuser, user]);
+
+  useEffect(() => {
+    if (newuser) {
+      setDisplayed(newuser);
+      updateUser(newuser._id, newuser);
+    }
+  }, [newuser]);
 
   if (edit) {
     return (
@@ -22,21 +38,28 @@ export default function Profile() {
         editInfo={() => {
           setEdit(false);
         }}
+        updateUser={data => setNewuser(data)}
       />
     );
   }
 
-  if (!user) {
+  if (!displayed) {
     return null;
   }
+
+  const image = displayed.imgUrl ? (
+    <Image source={{uri: `${displayed.imgUrl}`}} style={styles.image} />
+  ) : (
+    <ThemedBlankImage style={styles.image} />
+  );
 
   return (
     <View style={[{backgroundColor: colors.background}, styles.container]}>
       <ThemedText text={'Profile'} style={styles.title} />
       <View style={[{backgroundColor: colors.border}, styles.frame]} />
-      <Image source={{uri: `${user.imgUrl}`}} style={styles.image} />
-      <ThemedText text={`${user.name}`} style={styles.name} />
-      <ThemedText text={`${user.age}`} style={styles.age} />
+      {image}
+      <ThemedText text={`${displayed.name}`} style={styles.name} />
+      <ThemedText text={`Year ${displayed.year}`} style={styles.year} />
       <View>
         <ContainButton
           size={0.07 * HEIGHT}
@@ -109,12 +132,14 @@ const styles = StyleSheet.create({
     width: 0.4 * HEIGHT,
     height: 0.4 * HEIGHT,
     borderRadius: 0.2 * HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   name: {
     fontSize: HEIGHT * 0.04,
     marginTop: HEIGHT * 0.02,
   },
-  age: {
+  year: {
     fontSize: HEIGHT * 0.025,
   },
   icon: {

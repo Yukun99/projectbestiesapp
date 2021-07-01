@@ -1,21 +1,22 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Button, ScrollView} from 'react-native';
+import {View, StyleSheet, Button, ScrollView, Image} from 'react-native';
 import useColors from '../../states/ThemeState';
 import ThemedText from '../../components/ThemedText';
-import useUser, {updateUser} from '../../states/UserState';
+import useUser from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
 import ThemedTextInput from '../../components/ThemedTextInput';
+import ThemedBlankImage from '../../components/ThemedBlankImage';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function EditProfile({editInfo}) {
+export default function EditProfile({editInfo, updateUser}) {
   const [name, setName] = useState(undefined);
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
-  const [imgUrl, setImgUrl] = useState(null);
+  const [imgUrl, setImgUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
   const user = useUser();
@@ -23,6 +24,12 @@ export default function EditProfile({editInfo}) {
   if (!user) {
     return null;
   }
+
+  const image = user.imgUrl ? (
+    <Image source={{uri: `${user.imgUrl}`}} style={styles.image} />
+  ) : (
+    <ThemedBlankImage style={styles.image} />
+  );
 
   const userName = user.name;
   const userAge = user.age;
@@ -35,7 +42,6 @@ export default function EditProfile({editInfo}) {
         <ContainButton
           size={0.07 * HEIGHT}
           style={styles.backButton}
-          borderColor={colors.background}
           onPress={editInfo}
           content={
             <Icon
@@ -46,11 +52,14 @@ export default function EditProfile({editInfo}) {
             />
           }
         />
-        <ThemedText text={'Edit Profile'} style={styles.title} />
-        <ThemedText
-          text={'Fill in the fields you would like to edit.'}
-          style={styles.subtitle}
-        />
+        <View style={[styles.topBar, {borderColor: colors.border}]}>
+          <ThemedText text={'Edit Profile'} style={styles.title} />
+          <ThemedText
+            text={'Fill in the fields you would like to edit.'}
+            style={styles.subtitle}
+          />
+        </View>
+        <View style={styles.inputContainer}>{image}</View>
         <View style={styles.inputContainer}>
           <ThemedText
             text={'Full Name (as on Student Card)'}
@@ -138,27 +147,36 @@ export default function EditProfile({editInfo}) {
             style={styles.inputBox}
           />
         </View>
-        <View>
+        <View style={styles.inputContainer}>
           <Button
             onPress={() => {
+              console.log('Updating user...');
               if (name) {
-                updateUser(user._id, {name: name});
+                console.log('New name provided!');
+                user.name = name;
               }
-              if (age) {
-                updateUser(user._id, {age: age});
+              if (age && Number.isInteger(Number.parseInt(age, 10))) {
+                console.log('New age provided!');
+                user.age = age;
               }
-              if (year) {
-                updateUser(user._id, {year: year});
+              if (year && Number.isInteger(Number.parseInt(year, 10))) {
+                console.log('New year of study provided!');
+                user.year = year;
               }
               if (imgUrl) {
-                updateUser(user._id, {imgUrl: imgUrl});
+                console.log('New imgUrl provided!');
+                user.imgUrl = imgUrl;
               }
               if (projects[0] || projects[1] || projects[2]) {
-                updateUser(user._id, {projects: projects});
+                console.log('New projects provided!');
+                user.projects = projects;
               }
+              console.log('Passing new information to Profile screen...');
+              updateUser(user);
+              console.log('Closing edit screen...');
               editInfo();
             }}
-            title="Done"
+            title="Submit"
             color="#ff69b4"
           />
         </View>
@@ -175,12 +193,25 @@ const styles = StyleSheet.create({
     width: WIDTH,
     alignItems: 'center',
   },
+  backButton: {
+    zIndex: 1,
+    left: 0.02 * HEIGHT,
+    top: 0.02 * HEIGHT,
+    position: 'absolute',
+  },
+  topBar: {
+    height: 0.15 * HEIGHT,
+    width: WIDTH,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+  },
   title: {
     paddingTop: 30,
     alignSelf: 'center',
     textAlign: 'center',
     width: '90%',
-    fontSize: 0.12 * WIDTH,
+    fontSize: 0.1 * WIDTH,
   },
   subtitle: {
     paddingTop: 5,
@@ -188,8 +219,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     width: '95%',
-    fontSize: 0.066 * WIDTH,
+    fontSize: 0.05 * WIDTH,
     color: '#999999',
+  },
+  image: {
+    width: 0.3 * HEIGHT,
+    height: 0.3 * HEIGHT,
+    borderRadius: 0.15 * HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   inputContainer: {
     paddingTop: 10,
@@ -217,11 +256,5 @@ const styles = StyleSheet.create({
     width: 0.5 * WIDTH,
     justifyContent: 'center',
     alignSelf: 'center',
-  },
-  backButton: {
-    zIndex: 1,
-    left: 0.02 * HEIGHT,
-    top: 0.02 * HEIGHT,
-    position: 'absolute',
   },
 });

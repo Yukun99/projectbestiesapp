@@ -81,7 +81,7 @@ export default function Chat({current}) {
   if (!messages) {
     return (
       <View style={styles.container}>
-        <View style={[styles.topBar]}>
+        <View style={[styles.topBar, {borderColor: colors.border}]}>
           <ChatUserPicture user={other} self={false} />
           <ThemedText text={other.name} style={styles.title} />
         </View>
@@ -125,7 +125,7 @@ export default function Chat({current}) {
   if (messages.length === 0) {
     return (
       <View style={styles.container}>
-        <View style={[styles.topBar]}>
+        <View style={[styles.topBar, {borderColor: colors.border}]}>
           <ChatUserPicture user={other} self={false} />
           <ThemedText text={other.name} style={styles.title} />
         </View>
