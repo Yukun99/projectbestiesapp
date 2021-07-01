@@ -3,6 +3,10 @@ import {Text, View, StyleSheet, Image} from 'react-native';
 import {GoogleSigninButton} from '@react-native-community/google-signin';
 import useColors from '../../states/ThemeState';
 import {useColorScheme} from 'react-native-appearance';
+import {dim} from '../../lib/Dimensions';
+
+const HEIGHT = dim.height;
+const WIDTH = dim.width;
 
 export default function Login(props) {
   const colors = useColors();
@@ -40,17 +44,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 25,
-    marginBottom: 30,
+    textAlign: 'center',
+    fontSize: 0.07 * WIDTH,
+    marginBottom: 0.03 * HEIGHT,
   },
   icon: {
     height: '10%',
     resizeMode: 'contain',
-    marginBottom: 30,
+    marginBottom: 0.03 * HEIGHT,
   },
   subtitle: {
-    fontSize: 20,
-    marginBottom: 20,
+    textAlign: 'center',
+    fontSize: 0.03 * HEIGHT,
+    marginBottom: 0.02 * HEIGHT,
   },
   button: {
     borderWidth: 2,

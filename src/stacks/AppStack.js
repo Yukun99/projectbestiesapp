@@ -3,7 +3,7 @@ import {Image, LogBox, StyleSheet} from 'react-native';
 import useUser from '../states/UserState';
 import SignUp from '../screens/auth/SignUp';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Profile from '../screens/app/Profile';
+import Profile from '../screens/app/Profile/Profile';
 import Swipe from '../screens/app/Swipe';
 import ChatList from '../screens/app/ChatList';
 import auth from '@react-native-firebase/auth';

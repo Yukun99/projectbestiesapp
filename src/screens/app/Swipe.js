@@ -259,6 +259,17 @@ export default function Swipe() {
     ) : (
       <ThemedBlankImage style={styles.infoImage} />
     );
+    const projects =
+      info.projects.length > 0 ? (
+        info.projects.map((project, i) => (
+          <ThemedText key={i} text={project} style={styles.infoUser} />
+        ))
+      ) : (
+        <ThemedText
+          text={'This user has not chosen any projects to do yet!'}
+          style={styles.infoUser}
+        />
+      );
     return (
       <View style={styles.infoContainer}>
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -269,12 +280,12 @@ export default function Swipe() {
               <Icon
                 name={'arrowup'}
                 type={'antdesign'}
-                size={30}
+                size={0.045 * HEIGHT}
                 color={'white'}
               />
             }
-            backgroundColor={'#FF69B4FF'}
-            borderColor={'#FF69B4FF'}
+            backgroundColor={'#FF69B4'}
+            borderColor={'#FF69B4'}
             onPress={() => {
               setInfo(undefined);
             }}
@@ -288,9 +299,7 @@ export default function Swipe() {
           <ThemedText text={'Year'} style={styles.infoTitle} />
           <ThemedText text={info.year} style={styles.infoUser} />
           <ThemedText text={'Projects'} style={styles.infoTitle} />
-          {info.projects.map((project, i) => (
-            <ThemedText key={i} text={project} style={styles.infoUser} />
-          ))}
+          {projects}
           <ThemedText text={'Workstyle'} style={styles.infoTitle} />
           <ThemedText text={info.testResults} style={styles.infoUser} />
         </ScrollView>
@@ -362,22 +371,22 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
     height: 0.2 * HEIGHT,
     width: WIDTH,
+    bottom: 0,
+    left: 0,
   },
   nameText: {
     width: '100%',
-    fontSize: WIDTH / 10,
-    paddingLeft: 15,
+    fontSize: 0.1 * WIDTH,
+    paddingLeft: 0.035 * WIDTH,
     color: 'white',
   },
   yearText: {
     width: '100%',
-    fontSize: WIDTH / 17,
-    paddingBottom: 15,
-    paddingLeft: 15,
+    fontSize: 0.06 * WIDTH,
+    paddingBottom: 0.035 * WIDTH,
+    paddingLeft: 0.043 * WIDTH,
     color: 'white',
   },
   infoButton: {
@@ -396,11 +405,11 @@ const styles = StyleSheet.create({
   },
   infoName: {
     marginTop: 0.015 * HEIGHT,
+    marginLeft: 0.05 * WIDTH,
+    paddingBottom: 0.02 * HEIGHT,
     fontSize: 0.05 * HEIGHT,
     fontWeight: 'bold',
-    marginLeft: 0.05 * WIDTH,
     alignSelf: 'flex-start',
-    paddingBottom: 0.02 * HEIGHT,
   },
   infoImage: {
     width: WIDTH - 10,
@@ -425,7 +434,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: WIDTH - 10,
-    // alignItems: 'center',
   },
   header: {
     flex: 1,

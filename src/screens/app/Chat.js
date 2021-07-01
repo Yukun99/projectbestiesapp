@@ -267,8 +267,9 @@ const styles = StyleSheet.create({
   },
   noMessages: {
     fontSize: HEIGHT * 0.0175,
-    textAlign: 'center',
     paddingTop: HEIGHT * 0.02,
+    textAlign: 'center',
+    marginHorizontal: 0.1 * WIDTH,
   },
   list: {
     fontSize: HEIGHT * 0.05,
@@ -278,8 +279,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputBox: {
-    margin: 0,
-    paddingLeft: 10,
+    paddingLeft: 0.04 * WIDTH,
     width: WIDTH,
     bottom: 0,
     borderTopWidth: 1,
@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
     right: 0.01 * HEIGHT,
   },
   messageBubbleLeft: {
-    // position: 'absolute',
     left: 0.065 * HEIGHT,
     alignSelf: 'flex-start',
     backgroundColor: '#27c1bf',
@@ -319,10 +318,9 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 0.0175 * HEIGHT,
     borderBottomEndRadius: 0.0175 * HEIGHT,
     borderBottomStartRadius: 0.005 * HEIGHT,
-    maxWidth: WIDTH - 0.24 * WIDTH,
+    maxWidth: 0.76 * WIDTH,
   },
   messageBubbleRight: {
-    // position: 'absolute',
     right: 0.065 * HEIGHT,
     alignSelf: 'flex-end',
     backgroundColor: '#FF69B4',
@@ -331,6 +329,6 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 0.0175 * HEIGHT,
     borderBottomStartRadius: 0.0175 * HEIGHT,
     borderBottomEndRadius: 0.005 * HEIGHT,
-    maxWidth: WIDTH - 0.24 * WIDTH,
+    maxWidth: 0.76 * WIDTH,
   },
 });

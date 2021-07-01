@@ -126,4 +126,20 @@ export function updateUser(id, props) {
   );
 }
 
+/**
+ * Deletes all data related to current user from the database.
+ */
+export function deleteUser() {
+  const email = auth().currentUser.email;
+  console.log('Deleting user...');
+  axios.delete('/tinder/users/' + email).then(
+    () => {
+      console.log('Deleted user successfully.');
+    },
+    error => {
+      console.log(error + ' from deleteUser');
+    },
+  );
+}
+
 export default useUser;

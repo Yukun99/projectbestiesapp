@@ -1,21 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import useColors from '../../states/ThemeState';
-import ThemedText from '../../components/ThemedText';
-import useUser, {updateUser} from '../../states/UserState';
-import {dim} from '../../lib/Dimensions';
-import ContainButton from '../../components/ContainButton';
+import useColors from '../../../states/ThemeState';
+import ThemedText from '../../../components/ThemedText';
+import useUser, {updateUser} from '../../../states/UserState';
+import {dim} from '../../../lib/Dimensions';
+import ContainButton from '../../../components/ContainButton';
 import {Icon} from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
 import EditProfile from './EditProfile';
-import ThemedBlankImage from '../../components/ThemedBlankImage';
+import Settings from './Settings';
+import ThemedBlankImage from '../../../components/ThemedBlankImage';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
+
 export default function Profile() {
   const colors = useColors();
   const user = useUser();
   const [edit, setEdit] = useState(false);
+  const [settings, setSettings] = useState(false);
   const [newuser, setNewuser] = useState(null);
   const [displayed, setDisplayed] = useState(null);
 
@@ -35,10 +38,20 @@ export default function Profile() {
   if (edit) {
     return (
       <EditProfile
-        editInfo={() => {
+        editProfile={() => {
           setEdit(false);
         }}
         updateUser={data => setNewuser(data)}
+      />
+    );
+  }
+
+  if (settings) {
+    return (
+      <Settings
+        editSettings={() => {
+          setSettings(false);
+        }}
       />
     );
   }
@@ -64,12 +77,13 @@ export default function Profile() {
         <ContainButton
           size={0.07 * HEIGHT}
           style={styles.leftButton}
+          onPress={() => setSettings(true)}
           borderColor={colors.text}
           content={
             <Icon
               name={'setting'}
               type={'antdesign'}
-              size={35}
+              size={0.045 * HEIGHT}
               color={colors.text}
             />
           }
@@ -83,7 +97,7 @@ export default function Profile() {
             <Icon
               name={'logout'}
               type={'antdesign'}
-              size={30}
+              size={0.04 * HEIGHT}
               color={colors.text}
             />
           }
@@ -98,7 +112,7 @@ export default function Profile() {
           <Icon
             name={'pencil'}
             type={'evilicon'}
-            size={55}
+            size={0.07 * HEIGHT}
             color={colors.text}
           />
         }

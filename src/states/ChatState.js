@@ -71,7 +71,7 @@ export function useChat(recipient) {
 function useChats() {
   console.log('Fetching all chats...');
   const user = auth().currentUser.email;
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState(undefined);
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get('/tinder/chats/find/' + user);
@@ -88,14 +88,23 @@ function useChats() {
     );
   }, [user]);
 
-  if (!chats) {
-    return undefined;
-  }
-
-  if (!chats) {
-    return undefined;
-  }
   return chats;
+}
+
+/**
+ * Deletes all chats related to the current user from the database.
+ */
+export function deleteChats() {
+  const email = auth().currentUser.email;
+  console.log('Deleting all chats...');
+  axios.delete('/tinder/chats/find/' + email).then(
+    () => {
+      console.log('Deleted all chats successfully.');
+    },
+    error => {
+      console.log(error + ' from deleteChats');
+    },
+  );
 }
 
 export default useChats;

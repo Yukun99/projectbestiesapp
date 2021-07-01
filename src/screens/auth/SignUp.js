@@ -48,7 +48,14 @@ export default function SignUp({user, update}) {
     return null;
   }
 
-  if (name && email && age && year) {
+  if (
+    name &&
+    email &&
+    age &&
+    year &&
+    Number.isInteger(Number.parseInt(age, 10)) &&
+    Number.isInteger(Number.parseInt(year, 10))
+  ) {
     button = (
       <ThemedButton
         label={'Submit'}

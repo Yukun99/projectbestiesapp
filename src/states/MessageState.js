@@ -72,3 +72,20 @@ export function useMessages(chat) {
 
   return messages;
 }
+
+export function deleteMessages(chats) {
+  console.log('Deleting all messages...');
+  try {
+    chats.map(chat => {
+      axios.delete('/tinder/messages/' + chat._id).then(
+        () => {},
+        error => {
+          console.log(error + ' from deleteMessages');
+        },
+      );
+    });
+    console.log('Deleted user successfully.');
+  } catch (error) {
+    console.log(error + ' from deleteMessages');
+  }
+}

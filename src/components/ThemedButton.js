@@ -1,6 +1,9 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import useColors from '../states/ThemeState';
+import {dim} from '../lib/Dimensions';
+
+const WIDTH = dim.width;
 
 export default function ThemedButton({label, style, disabled, ...rest}) {
   const colors = useColors();
@@ -30,7 +33,7 @@ export default function ThemedButton({label, style, disabled, ...rest}) {
 const styles = StyleSheet.create({
   button: {
     borderWidth: 2.5,
-    borderRadius: 5,
+    borderRadius: 0.01 * WIDTH,
   },
   disabled: {
     flex: 1,

@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Button, ScrollView, Image} from 'react-native';
-import useColors from '../../states/ThemeState';
-import ThemedText from '../../components/ThemedText';
-import useUser from '../../states/UserState';
-import {dim} from '../../lib/Dimensions';
-import ContainButton from '../../components/ContainButton';
-import {Icon} from 'react-native-elements';
-import ThemedTextInput from '../../components/ThemedTextInput';
-import ThemedBlankImage from '../../components/ThemedBlankImage';
+import {View, StyleSheet, ScrollView, Image} from 'react-native';
+import useColors from '../../../states/ThemeState';
+import ThemedText from '../../../components/ThemedText';
+import useUser from '../../../states/UserState';
+import {dim} from '../../../lib/Dimensions';
+import ThemedTextInput from '../../../components/ThemedTextInput';
+import ThemedBlankImage from '../../../components/ThemedBlankImage';
+import BackButton from '../../../components/BackButton';
+import ThemedButton from '../../../components/ThemedButton';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function EditProfile({editInfo, updateUser}) {
+export default function EditProfile({editProfile, updateUser}) {
   const [name, setName] = useState(undefined);
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
@@ -20,6 +20,49 @@ export default function EditProfile({editInfo, updateUser}) {
   const projects = [];
   const colors = useColors();
   const user = useUser();
+  let button = (
+    <ThemedButton
+      label={'Submit'}
+      style={styles.submitButton}
+      disabled={true}
+    />
+  );
+
+  if (name || age || year || imgUrl) {
+    button = (
+      <ThemedButton
+        label={'Submit'}
+        style={styles.submitButton}
+        onPress={() => {
+          console.log('Updating user...');
+          if (name) {
+            console.log('New name provided!');
+            user.name = name;
+          }
+          if (age && Number.isInteger(Number.parseInt(age, 10))) {
+            console.log('New age provided!');
+            user.age = age;
+          }
+          if (year && Number.isInteger(Number.parseInt(year, 10))) {
+            console.log('New year of study provided!');
+            user.year = year;
+          }
+          if (imgUrl) {
+            console.log('New imgUrl provided!');
+            user.imgUrl = imgUrl;
+          }
+          if (projects[0] || projects[1] || projects[2]) {
+            console.log('New projects provided!');
+            user.projects = projects;
+          }
+          console.log('Passing new information to Profile screen...');
+          updateUser(user);
+          console.log('Closing edit screen...');
+          editProfile();
+        }}
+      />
+    );
+  }
 
   if (!user) {
     return null;
@@ -39,19 +82,7 @@ export default function EditProfile({editInfo, updateUser}) {
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <ContainButton
-          size={0.07 * HEIGHT}
-          style={styles.backButton}
-          onPress={editInfo}
-          content={
-            <Icon
-              name={'arrow-back'}
-              type={'material'}
-              size={35}
-              color={'#FF69B4'}
-            />
-          }
-        />
+        <BackButton onPress={editProfile} />
         <View style={[styles.topBar, {borderColor: colors.border}]}>
           <ThemedText text={'Edit Profile'} style={styles.title} />
           <ThemedText
@@ -115,18 +146,18 @@ export default function EditProfile({editInfo, updateUser}) {
             style={styles.inputSubText}
           />
           <ThemedTextInput
-            label={`${userProjects[0]}`}
+            label={userProjects[0] ? userProjects[0] : ''}
             onChangeText={data => {
               projects[0] = data;
             }}
-            value={projects[0]}
+            value={projects[0] ? projects[0] : ''}
             autoCorrect={false}
             style={styles.inputBox}
           />
         </View>
         <View style={styles.inputContainer}>
           <ThemedTextInput
-            label={`${userProjects[1]}`}
+            label={userProjects[1] ? userProjects[1] : ''}
             onChangeText={data => {
               projects[1] = data;
               console.log(!projects[1]);
@@ -138,7 +169,7 @@ export default function EditProfile({editInfo, updateUser}) {
         </View>
         <View style={styles.inputContainer}>
           <ThemedTextInput
-            label={`${userProjects[2]}`}
+            label={userProjects[2] ? userProjects[2] : ''}
             onChangeText={data => {
               projects[2] = data;
             }}
@@ -147,39 +178,7 @@ export default function EditProfile({editInfo, updateUser}) {
             style={styles.inputBox}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Button
-            onPress={() => {
-              console.log('Updating user...');
-              if (name) {
-                console.log('New name provided!');
-                user.name = name;
-              }
-              if (age && Number.isInteger(Number.parseInt(age, 10))) {
-                console.log('New age provided!');
-                user.age = age;
-              }
-              if (year && Number.isInteger(Number.parseInt(year, 10))) {
-                console.log('New year of study provided!');
-                user.year = year;
-              }
-              if (imgUrl) {
-                console.log('New imgUrl provided!');
-                user.imgUrl = imgUrl;
-              }
-              if (projects[0] || projects[1] || projects[2]) {
-                console.log('New projects provided!');
-                user.projects = projects;
-              }
-              console.log('Passing new information to Profile screen...');
-              updateUser(user);
-              console.log('Closing edit screen...');
-              editInfo();
-            }}
-            title="Submit"
-            color="#ff69b4"
-          />
-        </View>
+        <View style={styles.inputContainer}>{button}</View>
       </ScrollView>
     </View>
   );
@@ -193,12 +192,6 @@ const styles = StyleSheet.create({
     width: WIDTH,
     alignItems: 'center',
   },
-  backButton: {
-    zIndex: 1,
-    left: 0.02 * HEIGHT,
-    top: 0.02 * HEIGHT,
-    position: 'absolute',
-  },
   topBar: {
     height: 0.15 * HEIGHT,
     width: WIDTH,
@@ -207,15 +200,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   title: {
-    paddingTop: 30,
+    paddingTop: 0.03 * HEIGHT,
     alignSelf: 'center',
     textAlign: 'center',
     width: '90%',
     fontSize: 0.1 * WIDTH,
   },
   subtitle: {
-    paddingTop: 5,
-    paddingBottom: 30,
+    paddingTop: 0.005 * HEIGHT,
+    paddingBottom: 0.03 * HEIGHT,
     alignSelf: 'center',
     textAlign: 'center',
     width: '95%',
@@ -231,24 +224,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   inputContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 0.015 * HEIGHT,
+    paddingBottom: 0.015 * HEIGHT,
     width: '85%',
   },
   inputText: {
     fontSize: 0.05 * WIDTH,
-    paddingBottom: 7,
-    paddingLeft: 5,
+    paddingBottom: 0.01 * HEIGHT,
+    paddingLeft: 0.01 * WIDTH,
   },
   inputSubText: {
     fontSize: 0.034 * WIDTH,
-    paddingBottom: 7,
-    paddingLeft: 5,
+    paddingBottom: 0.01 * HEIGHT,
+    paddingLeft: 0.01 * WIDTH,
     color: '#999999',
   },
   inputBox: {
-    margin: 0,
-    paddingLeft: 10,
+    paddingLeft: 0.03 * WIDTH,
     width: '100%',
   },
   submitButton: {

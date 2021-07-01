@@ -7,8 +7,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import ThemedText from '../../components/ThemedText';
 import useColors from '../../states/ThemeState';
 import {dim} from '../../lib/Dimensions';
-import {Icon} from 'react-native-elements';
-import ContainButton from '../../components/ContainButton';
+import BackButton from '../../components/BackButton';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -18,9 +17,33 @@ export default function ChatList() {
   const [current, setCurrent] = useState(undefined);
   const colors = useColors();
 
-  // waiting for data, display nothing
-  if (!chats || chats.length === 0) {
+  if (!chats) {
+    // waiting for data, display nothing
     return null;
+  }
+
+  if (chats.length === 0) {
+    // no matches yet, suggest for user to go find some
+    return (
+      <View style={styles.container}>
+        <ThemedText
+          style={[styles.list, {borderBottomColor: colors.border}]}
+          text={'Your Matches'}
+        />
+        <View style={styles.emptyContainer}>
+          <ThemedText
+            text={'You have no matches.'}
+            style={[styles.emptyText]}
+            color={colors.border}
+          />
+          <ThemedText
+            text={'Swipe around to find some!'}
+            style={[styles.emptyText]}
+            color={colors.border}
+          />
+        </View>
+      </View>
+    );
   }
 
   const matches = chats.map(chat => {
@@ -55,20 +78,7 @@ export default function ChatList() {
 
   return (
     <View style={styles.container}>
-      <ContainButton
-        size={0.07 * HEIGHT}
-        style={styles.backButton}
-        borderColor={colors.background}
-        onPress={() => setCurrent(undefined)}
-        content={
-          <Icon
-            name={'arrow-back'}
-            type={'material'}
-            size={35}
-            color={'#FF69B4'}
-          />
-        }
-      />
+      <BackButton onPress={() => setCurrent(undefined)} />
       <Chat current={current} setCurrent={setCurrent} />
     </View>
   );
@@ -84,6 +94,17 @@ const styles = StyleSheet.create({
     width: WIDTH,
     alignItems: 'center',
   },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 0.025 * HEIGHT,
+    textAlign: 'center',
+    alignSelf: 'center',
+    marginHorizontal: 0.06 * WIDTH,
+  },
   backButton: {
     zIndex: 1,
     left: 0.02 * HEIGHT,
@@ -91,10 +112,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   list: {
-    fontSize: HEIGHT * 0.05,
+    fontSize: 0.05 * HEIGHT,
+    height: 0.095 * HEIGHT,
     width: WIDTH,
     zIndex: 2,
     borderBottomWidth: 1,
     textAlign: 'center',
+    textAlignVertical: 'center',
   },
 });

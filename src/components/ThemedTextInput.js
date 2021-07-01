@@ -1,6 +1,9 @@
 import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import useColors from '../states/ThemeState';
+import {dim} from '../lib/Dimensions';
+
+const WIDTH = dim.width;
 
 export default function ThemedTextInput({label, value, style, ...rest}) {
   const colors = useColors();
@@ -27,6 +30,6 @@ export default function ThemedTextInput({label, value, style, ...rest}) {
 const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2.5,
-    borderRadius: 5,
+    borderRadius: 0.01 * WIDTH,
   },
 });
