@@ -6,7 +6,6 @@ import useUser, {updateUser} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
-import auth from '@react-native-firebase/auth';
 import ThemedTextInput from '../../components/ThemedTextInput';
 
 const HEIGHT = dim.height;

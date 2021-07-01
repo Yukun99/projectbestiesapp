@@ -18,18 +18,19 @@ import {Icon} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
 import auth from '@react-native-firebase/auth';
 import useColors from '../../states/ThemeState';
+import ThemedBlankImage from '../../components/ThemedBlankImage';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function Swipe() {
   const self = useUser(auth().currentUser.email);
+  // reversed since the order of display means last card is rendered on top
   const users = useUsers().reverse();
   const colors = useColors();
 
   // for info button to show user info
   const [info, setInfo] = useState(undefined);
-  // console.log(self.matches);
 
   // initialise position of card
   const position = new Animated.ValueXY();
@@ -54,7 +55,7 @@ export default function Swipe() {
     ],
   };
 
-  // opacity for yes/no text
+  // opacity for yes/no text based on displacement from center
   const yesOpacity = position.x.interpolate({
     inputRange: [-WIDTH / 2, 0, WIDTH / 2],
     outputRange: [0, 0, 2],
@@ -86,7 +87,7 @@ export default function Swipe() {
     },
     onPanResponderRelease: (evt, gestureState) => {
       if (gestureState.dx > 120) {
-        // yes
+        // what to do when swiped right
         const matches = self.matches;
         matches[matches.length] = users[index].email;
         const swiped = self.swiped;
@@ -102,7 +103,7 @@ export default function Swipe() {
         setIndex(index + 1);
         position.setValue({x: 0, y: 0});
       } else if (gestureState.dx < -120) {
-        // no
+        // what to do when swiped left
         const swiped = self.swiped;
         swiped[swiped.length] = users[index].email;
         updateUser(self._id, {swiped: swiped});
@@ -113,6 +114,7 @@ export default function Swipe() {
         setIndex(index + 1);
         position.setValue({x: 0, y: 0});
       } else {
+        // what to do if undecided yet
         Animated.spring(position, {
           toValue: {x: 0, y: 0},
           friction: 3,
@@ -131,6 +133,11 @@ export default function Swipe() {
   if (!info) {
     return users
       .map((user, i) => {
+        const image = user.imgUrl ? (
+          <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+        ) : (
+          <ThemedBlankImage style={styles.cardImage} />
+        );
         if (user === 'end') {
           return (
             <View style={[styles.container, styles.empty]} key={i}>
@@ -172,12 +179,11 @@ export default function Swipe() {
                 <Text style={[styles.noText]}>NO!</Text>
               </Animated.View>
               <View style={styles.swipeCard}>
-                <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+                {image}
                 <TouchableOpacity
                   style={[styles.textContainer, styles.infoButton]}
                   onPress={() => {
                     setInfo(user);
-                    console.log('gay');
                   }}
                 />
                 <LinearGradient
@@ -219,7 +225,7 @@ export default function Swipe() {
                 },
               ]}>
               <View style={styles.swipeCard}>
-                <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+                {image}
                 <LinearGradient
                   colors={[
                     'rgba(0,0,0,1)',
@@ -248,6 +254,11 @@ export default function Swipe() {
       })
       .reverse();
   } else {
+    const image = info.imgUrl ? (
+      <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
+    ) : (
+      <ThemedBlankImage style={styles.infoImage} />
+    );
     return (
       <View style={styles.infoContainer}>
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -266,10 +277,9 @@ export default function Swipe() {
             borderColor={'#FF69B4FF'}
             onPress={() => {
               setInfo(undefined);
-              console.log('lesbian');
             }}
           />
-          <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
+          {image}
           <View style={styles.header}>
             <ThemedText text={info.name} style={styles.infoName} />
           </View>
@@ -311,6 +321,8 @@ const styles = StyleSheet.create({
     height: '100%',
     position: 'absolute',
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   yesContainer: {
     position: 'absolute',
@@ -391,11 +403,11 @@ const styles = StyleSheet.create({
     paddingBottom: 0.02 * HEIGHT,
   },
   infoImage: {
-    // justifyContent: 'center',
-    // alignSelf: 'center',
     width: WIDTH - 10,
     height: 0.75 * HEIGHT,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   infoUser: {
     marginLeft: 0.05 * WIDTH,
@@ -423,9 +435,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     marginLeft: 0.25 * WIDTH,
     marginTop: -0.04 * HEIGHT,
-    right: 0.05 * WIDTH,
     zIndex: 10,
     position: 'absolute',
+    right: 0.05 * WIDTH,
     top: 0.75 * HEIGHT,
   },
 });

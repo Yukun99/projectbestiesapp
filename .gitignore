@@ -20,10 +20,8 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-
 # Android/IntelliJ
 #
-build/
 .idea
 .gradle
 local.properties

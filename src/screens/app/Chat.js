@@ -15,7 +15,7 @@ import io from 'socket.io-client';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function Chat({current, setCurrent}) {
+export default function Chat({current}) {
   const colors = useColors();
   const self = useUser();
   const other = useUser(current);
@@ -38,10 +38,10 @@ export default function Chat({current, setCurrent}) {
     });
   });
 
-  socket.on('newMessage', ({message}) => {
-    console.log('New message received with contents: ' + message);
+  socket.on('newMessage', ({msg}) => {
+    console.log('New message received with contents: ' + msg);
     const newMessage = {
-      message: message,
+      message: msg,
       self: false,
     };
     setIncMessage(newMessage);
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     // position: 'absolute',
     left: 0.065 * HEIGHT,
     alignSelf: 'flex-start',
-    backgroundColor: '#44dbd8',
+    backgroundColor: '#27c1bf',
     padding: 0.01 * HEIGHT,
     borderTopStartRadius: 0.0175 * HEIGHT,
     borderTopEndRadius: 0.0175 * HEIGHT,

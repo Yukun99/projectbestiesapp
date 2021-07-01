@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 
+// pre-run if you want to bundle full app
+// react-native bundle --platform android --dev false --entry-file index.js --bundle-output app/src/main/assets/index.android.bundle --assets-dest app/src/main/res/
+
 // styling bs
 import 'react-native-gesture-handler';
-import {StyleSheet} from 'react-native';
 import {
   DefaultTheme,
   DarkTheme,
@@ -79,8 +81,5 @@ const App: () => Node = () => {
     </AppearanceProvider>
   );
 };
-
-// StyleSheet for future app styling
-const styles = StyleSheet.create({});
 
 export default App;

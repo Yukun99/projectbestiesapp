@@ -40,11 +40,10 @@ export function createMessage(chatID, senderID, message) {
 }
 
 /**
- * Fetch messages with specified chat ID.
- * Returns empty array if waiting for response.
- * Returns undefined if chat ID is undefined.
- * @param chatId Chat ID to find messages for.
- * @returns {*|[]} Array of messages with specified chat ID.
+ * Fetch messages with specified chat.
+ * Returns undefined if waiting for response or chat is undefined.
+ * @param chat Chat to find messages for.
+ * @returns {*|undefined} Array of messages with specified chat.
  */
 export function useMessages(chat) {
   let chatId = '';
