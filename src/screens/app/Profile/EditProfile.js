@@ -17,6 +17,7 @@ export default function EditProfile({editProfile, updateUser}) {
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
   const [imgUrl, setImgUrl] = useState(undefined);
+  const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
   const user = useUser();
@@ -50,6 +51,10 @@ export default function EditProfile({editProfile, updateUser}) {
           if (imgUrl) {
             console.log('New imgUrl provided!');
             user.imgUrl = imgUrl;
+          }
+          if (linkedInUrl) {
+            console.log('New linkedInUrl provided!');
+            user.linkedInUrl = linkedInUrl;
           }
           if (projects[0] || projects[1] || projects[2]) {
             console.log('New projects provided!');
@@ -134,6 +139,17 @@ export default function EditProfile({editProfile, updateUser}) {
             label={'Image URL'}
             onChangeText={data => setImgUrl(data)}
             value={imgUrl}
+            autoCorrect={false}
+            style={styles.inputBox}
+            keyboardType={'url'}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <ThemedText text={'LinkedIn URL'} style={styles.inputText} />
+          <ThemedTextInput
+            label={'LinkedIn URL'}
+            onChangeText={data => setLinkedInUrl(data)}
+            value={linkedInUrl}
             autoCorrect={false}
             style={styles.inputBox}
             keyboardType={'url'}

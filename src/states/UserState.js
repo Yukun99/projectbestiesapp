@@ -11,7 +11,7 @@ import auth from '@react-native-firebase/auth';
  * @param imgUrl Image URL of new user.
  * @param projects Projects done by new user.
  */
-export function createUser(name, email, age, year, imgUrl, projects) {
+export function createUser(name, email, age, year, imgUrl, linkedInUrl, projects) {
   console.log('Creating new user with email: ' + email + '...');
   axios
     .post('/tinder/users', {
@@ -20,6 +20,7 @@ export function createUser(name, email, age, year, imgUrl, projects) {
       age: age,
       year: year,
       imgUrl: imgUrl,
+      linkedInUrl: linkedInUrl,
       projects: projects,
     })
     .then(

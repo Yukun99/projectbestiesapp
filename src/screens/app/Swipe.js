@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Linking,
 } from 'react-native';
 import React, {useState} from 'react';
 import ThemedText from '../../components/ThemedText';
@@ -300,6 +301,16 @@ export default function Swipe() {
           <ThemedText text={info.year} style={styles.infoUser} />
           <ThemedText text={'Projects'} style={styles.infoTitle} />
           {projects}
+          <ThemedText text={'LinkedIn'} style={styles.infoTitle} />
+          <ThemedText
+            text={info.linkedInUrl}
+            style={styles.infoUser}
+            color={'#27c1bf'}
+            onPress={() => {
+              Linking.openURL(info.linkedInUrl);
+              console.log('hi');
+            }}
+          />
           <ThemedText text={'Workstyle'} style={styles.infoTitle} />
           <ThemedText text={info.testResults} style={styles.infoUser} />
         </ScrollView>

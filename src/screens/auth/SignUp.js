@@ -18,6 +18,7 @@ export default function SignUp({user, update}) {
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
   const [imgUrl, setImgUrl] = useState(null);
+  const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
   const [delay, setDelay] = useState(true);
@@ -28,7 +29,7 @@ export default function SignUp({user, update}) {
       style={styles.submitButton}
       disabled={true}
       onPress={() => {
-        createUser(name, email, age, year, imgUrl, projects);
+        createUser(name, email, age, year, imgUrl, linkedInUrl, projects);
       }}
     />
   );
@@ -61,7 +62,7 @@ export default function SignUp({user, update}) {
         label={'Submit'}
         style={styles.submitButton}
         onPress={() => {
-          createUser(name, email, age, year, imgUrl, projects);
+          createUser(name, email, age, year, imgUrl, linkedInUrl, projects);
           setRegistered(true);
         }}
       />
@@ -121,6 +122,17 @@ export default function SignUp({user, update}) {
               label={'Image URL'}
               onChangeText={data => setImgUrl(data)}
               value={imgUrl}
+              autoCorrect={false}
+              style={styles.inputBox}
+              keyboardType={'url'}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <ThemedText text={'LinkedIn URL'} style={styles.inputText} />
+            <ThemedTextInput
+              label={'LinkedIn URL'}
+              onChangeText={data => setLinkedInUrl(data)}
+              value={linkedInUrl}
               autoCorrect={false}
               style={styles.inputBox}
               keyboardType={'url'}
