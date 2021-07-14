@@ -1,22 +1,30 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, Image} from 'react-native';
 import useColors from '../../../states/ThemeState';
 import ThemedText from '../../../components/ThemedText';
 import useUser from '../../../states/UserState';
 import {dim} from '../../../lib/Dimensions';
 import ThemedTextInput from '../../../components/ThemedTextInput';
-import ThemedBlankImage from '../../../components/ThemedBlankImage';
 import BackButton from '../../../components/BackButton';
 import ThemedButton from '../../../components/ThemedButton';
+import {launchImageLibrary} from 'react-native-image-picker';
+import ContainButton from '../../../components/ContainButton';
+import {Icon} from 'react-native-elements';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
+const options = {
+  selectionLimit: 1,
+  mediaType: 'photo',
+  includeBase64: true,
+};
 
 export default function EditProfile({editProfile, updateUser}) {
   const [name, setName] = useState(undefined);
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
-  const [imgUrl, setImgUrl] = useState(undefined);
+  const [image, setImage] = useState(undefined);
+  const [imgBase64, setImgBase64] = useState(undefined);
   const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
@@ -29,7 +37,47 @@ export default function EditProfile({editProfile, updateUser}) {
     />
   );
 
-  if (name || age || year || imgUrl) {
+  const [displayImage, setDisplayImage] = useState(
+    <View style={[styles.image, {borderColor: colors.border}]}>
+      <ThemedText
+        text={'Upload Image'}
+        color={colors.border}
+        style={styles.imageText}
+      />
+    </View>,
+  );
+
+  useEffect(() => {
+    if (user && user.imgBase64) {
+      setImgBase64(user.imgBase64);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (imgBase64) {
+      setDisplayImage(
+        <Image
+          style={[styles.image, {borderColor: colors.border}]}
+          source={{uri: `data:image/png;base64,${imgBase64}`}}
+        />,
+      );
+      setImgBase64(imgBase64);
+    }
+  }, [colors.border, imgBase64]);
+
+  useEffect(() => {
+    if (image && image.assets) {
+      setDisplayImage(
+        <Image
+          style={[styles.image, {borderColor: colors.border}]}
+          source={{uri: image.assets[0].uri}}
+        />,
+      );
+      setImgBase64(image.assets[0].base64);
+    }
+  }, [image, colors.border]);
+
+  if (name || age || year || imgBase64) {
     button = (
       <ThemedButton
         label={'Submit'}
@@ -48,9 +96,9 @@ export default function EditProfile({editProfile, updateUser}) {
             console.log('New year of study provided!');
             user.year = year;
           }
-          if (imgUrl) {
-            console.log('New imgUrl provided!');
-            user.imgUrl = imgUrl;
+          if (imgBase64) {
+            console.log('New imgBase64 provided!');
+            user.imgBase64 = imgBase64;
           }
           if (linkedInUrl) {
             console.log('New linkedInUrl provided!');
@@ -73,12 +121,6 @@ export default function EditProfile({editProfile, updateUser}) {
     return null;
   }
 
-  const image = user.imgUrl ? (
-    <Image source={{uri: `${user.imgUrl}`}} style={styles.image} />
-  ) : (
-    <ThemedBlankImage style={styles.image} />
-  );
-
   const userName = user.name;
   const userAge = user.age;
   const userYear = user.year;
@@ -95,7 +137,38 @@ export default function EditProfile({editProfile, updateUser}) {
             style={styles.subtitle}
           />
         </View>
-        <View style={styles.inputContainer}>{image}</View>
+        <View style={styles.inputContainer}>
+          <ContainButton
+            style={styles.image}
+            content={displayImage}
+            size={0.3 * HEIGHT}
+            onPress={() =>
+              launchImageLibrary(options, res => {
+                setImage(res);
+              })
+            }
+          />
+          <ContainButton
+            size={0.1 * HEIGHT}
+            style={styles.editButton}
+            onPress={() =>
+              launchImageLibrary(options, res => {
+                setImage(res);
+              })
+            }
+            borderColor={colors.background}
+            backgroundColor={colors.border}
+            borderWidth={0.004 * HEIGHT}
+            content={
+              <Icon
+                name={'pencil'}
+                type={'evilicon'}
+                size={0.07 * HEIGHT}
+                color={colors.text}
+              />
+            }
+          />
+        </View>
         <View style={styles.inputContainer}>
           <ThemedText
             text={'Full Name (as on Student Card)'}
@@ -131,17 +204,6 @@ export default function EditProfile({editProfile, updateUser}) {
             autoCorrect={false}
             style={styles.inputBox}
             keyboardType={'numeric'}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText text={'Profile Image URL'} style={styles.inputText} />
-          <ThemedTextInput
-            label={'Image URL'}
-            onChangeText={data => setImgUrl(data)}
-            value={imgUrl}
-            autoCorrect={false}
-            style={styles.inputBox}
-            keyboardType={'url'}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -238,6 +300,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    borderWidth: 2.5,
+  },
+  editButton: {
+    position: 'absolute',
+    right: 0.175 * WIDTH,
+    bottom: 0,
   },
   inputContainer: {
     paddingTop: 0.015 * HEIGHT,

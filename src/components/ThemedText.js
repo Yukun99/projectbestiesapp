@@ -15,5 +15,9 @@ export default function ThemedText({text, style, color, truncate, ...rest}) {
       );
     }
   }
-  return <Text style={[style, {color: textColor}]} {...rest}>{text}</Text>;
+  return (
+    <Text style={[style, {color: textColor}]} {...rest}>
+      {text}
+    </Text>
+  );
 }

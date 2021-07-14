@@ -8,10 +8,19 @@ import auth from '@react-native-firebase/auth';
  * @param email Email of new user.
  * @param age Age of new user.
  * @param year Year of study of new user.
- * @param imgUrl Image URL of new user.
+ * @param imgBase64 Image of new user, encoded as Base64.
+ * @param linkedInUrl LinkedIn URL of new user.
  * @param projects Projects done by new user.
  */
-export function createUser(name, email, age, year, imgUrl, linkedInUrl, projects) {
+export function createUser(
+  name,
+  email,
+  age,
+  year,
+  imgBase64,
+  linkedInUrl,
+  projects,
+) {
   console.log('Creating new user with email: ' + email + '...');
   axios
     .post('/tinder/users', {
@@ -19,7 +28,7 @@ export function createUser(name, email, age, year, imgUrl, linkedInUrl, projects
       email: email,
       age: age,
       year: year,
-      imgUrl: imgUrl,
+      imgBase64: imgBase64,
       linkedInUrl: linkedInUrl,
       projects: projects,
     })

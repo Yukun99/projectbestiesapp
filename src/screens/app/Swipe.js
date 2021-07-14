@@ -134,10 +134,13 @@ export default function Swipe() {
   if (!info) {
     return users
       .map((user, i) => {
-        const image = user.imgUrl ? (
-          <Image source={{uri: user.imgUrl}} style={styles.cardImage} />
+        const image = user.imgBase64 ? (
+          <Image
+            source={{uri: `data:image/png;base64,${user.imgBase64}`}}
+            style={styles.cardImage}
+          />
         ) : (
-          <ThemedBlankImage style={styles.cardImage} />
+          <ThemedBlankImage style={styles.cardImage} size={0.95 * WIDTH} />
         );
         if (user === 'end') {
           return (
@@ -255,10 +258,13 @@ export default function Swipe() {
       })
       .reverse();
   } else {
-    const image = info.imgUrl ? (
-      <Image source={{uri: info.imgUrl}} style={styles.infoImage} />
+    const image = info.imgBase64 ? (
+      <Image
+        source={{uri: `data:image/png;base64,${info.imgBase64}`}}
+        style={styles.infoImage}
+      />
     ) : (
-      <ThemedBlankImage style={styles.infoImage} />
+      <ThemedBlankImage style={styles.infoImage} size={0.95 * WIDTH} />
     );
     const projects =
       info.projects.length > 0 ? (
@@ -307,7 +313,7 @@ export default function Swipe() {
             style={styles.infoUser}
             color={'#27c1bf'}
             onPress={() => {
-              Linking.openURL(info.linkedInUrl);
+              Linking.openURL(info.linkedInUrl).then();
               console.log('hi');
             }}
           />

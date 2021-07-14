@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
 import ThemedTextInput from '../../components/ThemedTextInput';
@@ -8,16 +8,24 @@ import auth from '@react-native-firebase/auth';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
 import PersonalityTest from './PersonalityTest';
+import {launchImageLibrary} from 'react-native-image-picker';
+import ContainButton from '../../components/ContainButton';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
+const options = {
+  selectionLimit: 1,
+  mediaType: 'photo',
+  includeBase64: true,
+};
 
 export default function SignUp({user, update}) {
   const [name, setName] = useState(undefined);
   const email = auth().currentUser.email;
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
-  const [imgUrl, setImgUrl] = useState(null);
+  const [image, setImage] = useState(undefined);
+  const [imgBase64, setImgBase64] = useState(undefined);
   const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
@@ -29,10 +37,32 @@ export default function SignUp({user, update}) {
       style={styles.submitButton}
       disabled={true}
       onPress={() => {
-        createUser(name, email, age, year, imgUrl, linkedInUrl, projects);
+        createUser(name, email, age, year, imgBase64, linkedInUrl, projects);
       }}
     />
   );
+
+  const [displayImage, setDisplayImage] = useState(
+    <View style={[styles.image, {borderColor: colors.border}]}>
+      <ThemedText
+        text={'Upload Image'}
+        color={colors.border}
+        style={styles.imageText}
+      />
+    </View>,
+  );
+
+  useEffect(() => {
+    if (image && image.assets) {
+      setDisplayImage(
+        <Image
+          style={[styles.image, {borderColor: colors.border}]}
+          source={{uri: image.assets[0].uri}}
+        />,
+      );
+      setImgBase64(image.assets[0].base64);
+    }
+  }, [colors.border, image]);
 
   useEffect(() => {
     const timeout = setTimeout(() => setDelay(false), 3000);
@@ -61,8 +91,8 @@ export default function SignUp({user, update}) {
       <ThemedButton
         label={'Submit'}
         style={styles.submitButton}
-        onPress={() => {
-          createUser(name, email, age, year, imgUrl, linkedInUrl, projects);
+        onPress={async () => {
+          createUser(name, email, age, year, imgBase64, linkedInUrl, projects);
           setRegistered(true);
         }}
       />
@@ -80,6 +110,16 @@ export default function SignUp({user, update}) {
           <ThemedText
             text={'Please fill in the information below to get started.'}
             style={styles.subtitle}
+          />
+          <ContainButton
+            style={styles.image}
+            content={displayImage}
+            size={0.3 * HEIGHT}
+            onPress={() =>
+              launchImageLibrary(options, res => {
+                setImage(res);
+              })
+            }
           />
           <View style={styles.inputContainer}>
             <ThemedText
@@ -114,17 +154,6 @@ export default function SignUp({user, update}) {
               autoCorrect={false}
               style={styles.inputBox}
               keyboardType={'numeric'}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <ThemedText text={'Profile Image URL'} style={styles.inputText} />
-            <ThemedTextInput
-              label={'Image URL'}
-              onChangeText={data => setImgUrl(data)}
-              value={imgUrl}
-              autoCorrect={false}
-              style={styles.inputBox}
-              keyboardType={'url'}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -208,9 +237,20 @@ const styles = StyleSheet.create({
     fontSize: 0.066 * WIDTH,
     color: '#999999',
   },
+  image: {
+    width: 0.3 * HEIGHT,
+    height: 0.3 * HEIGHT,
+    borderRadius: 0.15 * HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderWidth: 2.5,
+  },
+  imageText: {
+    fontSize: 0.045 * WIDTH,
+  },
   inputContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: 10,
     width: '85%',
   },
   inputText: {
@@ -228,6 +268,11 @@ const styles = StyleSheet.create({
     margin: 0,
     paddingLeft: 10,
     width: '100%',
+  },
+  uploadButton: {
+    paddingVertical: 10,
+    width: '100%',
+    justifyContent: 'center',
   },
   submitButton: {
     height: 0.05 * HEIGHT,

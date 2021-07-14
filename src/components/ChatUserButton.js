@@ -22,12 +22,10 @@ export default function ChatUserButton({email, ...rest}) {
     return null;
   }
 
-  if (user.imgUrl) {
+  if (user.imgBase64) {
     image = (
       <Image
-        source={{
-          uri: user.imgUrl,
-        }}
+        source={{uri: `data:image/png;base64,${user.imgBase64}`}}
         style={styles.image}
       />
     );

@@ -60,10 +60,13 @@ export default function Profile() {
     return null;
   }
 
-  const image = displayed.imgUrl ? (
-    <Image source={{uri: `${displayed.imgUrl}`}} style={styles.image} />
+  const image = displayed.imgBase64 ? (
+    <Image
+      source={{uri: `data:image/png;base64,${displayed.imgBase64}`}}
+      style={[styles.image, {borderColor: colors.border}]}
+    />
   ) : (
-    <ThemedBlankImage style={styles.image} />
+    <ThemedBlankImage style={[styles.image, {borderColor: colors.border}]} />
   );
 
   return (
@@ -146,6 +149,7 @@ const styles = StyleSheet.create({
     width: 0.4 * HEIGHT,
     height: 0.4 * HEIGHT,
     borderRadius: 0.2 * HEIGHT,
+    borderWidth: 2.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
