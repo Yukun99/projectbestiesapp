@@ -27,7 +27,55 @@ const WIDTH = dim.width;
 export default function Swipe() {
   const self = useUser(auth().currentUser.email);
   // reversed since the order of display means last card is rendered on top
-  const users = useUsers().reverse();
+  const users = useUsers()
+    .reverse()
+    .map(item => {
+      let score = 0;
+      for (let i = 0; i < item.projects.length; i++) {
+        for (let j = 0; j < self.projects.length; j++) {
+          if (!item.projects[i] || !self.projects[j]) {
+            continue;
+          }
+          if (
+            item.projects[i].toLowerCase().replace(/ /g, '') ===
+            self.projects[j].toLowerCase().replace(/ /g, '')
+          ) {
+            score = score + 3;
+          }
+        }
+      }
+      if (self.testResults === 'Logical' || self.testResults === 'Organised') {
+        if (
+          item.testResults === 'Supportive' ||
+          item.testResults === 'Big Picture'
+        ) {
+          score = score + 1;
+        }
+      }
+      if (
+        self.testResults === 'Supportive' ||
+        self.testResults === 'Big Picture'
+      ) {
+        if (
+          item.testResults === 'Logical' ||
+          item.testResults === 'Organised'
+        ) {
+          score = score + 1;
+        }
+      }
+      item.score = score;
+      return item;
+    })
+    .sort((a, b) => {
+      if (a.score > b.score) {
+        return -1;
+      }
+      if (a.score < b.score) {
+        return 1;
+      }
+      return 0;
+    });
+
   const colors = useColors();
 
   // for info button to show user info

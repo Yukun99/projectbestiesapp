@@ -76,6 +76,7 @@ export default function Profile() {
       {image}
       <ThemedText text={`${displayed.name}`} style={styles.name} />
       <ThemedText text={`Year ${displayed.year}`} style={styles.year} />
+      <ThemedText text={`${displayed.testResults}`} style={styles.year} />
       <View>
         <ContainButton
           size={0.07 * HEIGHT}
