@@ -34,6 +34,7 @@ export function createUser(
   linkedInUrl,
   projects,
   confirmed,
+  deleted,
 ) {
   console.log('Creating new user with email: ' + email + '...');
   if (id) {
@@ -48,6 +49,7 @@ export function createUser(
         linkedInUrl: linkedInUrl,
         projects: projects,
         confirmed: confirmed,
+        deleted: deleted,
       })
       .then(
         () => {
@@ -211,6 +213,7 @@ export function updateUser(id, props) {
       newUser[keys[i]] = values[i];
     }
   }
+  newUser['deleted'] = false;
   if (update) {
     axios.delete('/tinder/users/delete/' + app.currentUser.profile.email).then(
       () => {
@@ -230,6 +233,7 @@ export function updateUser(id, props) {
       newUser.linkedInUrl,
       newUser.projects,
       true,
+      false,
     );
   }
   axios.put('/tinder/users/:id', newUser).then(

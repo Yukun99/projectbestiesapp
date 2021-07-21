@@ -126,8 +126,11 @@ const App: () => Node = () => {
               setReload(true);
               setLogged(false);
               getRealmApp()
-                .currentUser.logOut()
-                .then(() => {});
+                .removeUser(getRealmApp().currentUser)
+                .then(() => {})
+                .catch(err => {
+                  console.log(err);
+                });
             }}
           />
         </NavigationContainer>
