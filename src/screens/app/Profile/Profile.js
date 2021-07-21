@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import useColors from '../../../states/ThemeState';
 import ThemedText from '../../../components/ThemedText';
-import useUser, {updateUser} from '../../../states/UserState';
+import {getRealmApp, updateUser, useUserById} from '../../../states/UserState';
 import {dim} from '../../../lib/Dimensions';
 import ContainButton from '../../../components/ContainButton';
 import {Icon} from 'react-native-elements';
-import auth from '@react-native-firebase/auth';
 import EditProfile from './EditProfile';
 import Settings from './Settings';
 import ThemedBlankImage from '../../../components/ThemedBlankImage';
@@ -14,9 +13,9 @@ import ThemedBlankImage from '../../../components/ThemedBlankImage';
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function Profile() {
+export default function Profile({logout}) {
   const colors = useColors();
-  const user = useUser();
+  const user = useUserById(getRealmApp().currentUser, true);
   const [edit, setEdit] = useState(false);
   const [settings, setSettings] = useState(false);
   const [newuser, setNewuser] = useState(null);
@@ -95,7 +94,9 @@ export default function Profile() {
         <ContainButton
           size={0.07 * HEIGHT}
           style={styles.rightButton}
-          onPress={() => auth().signOut()}
+          onPress={() => {
+            logout();
+          }}
           borderColor={colors.text}
           content={
             <Icon

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, Image} from 'react-native';
 import useColors from '../../../states/ThemeState';
 import ThemedText from '../../../components/ThemedText';
-import useUser from '../../../states/UserState';
+import {getRealmApp, useUserById} from '../../../states/UserState';
 import {dim} from '../../../lib/Dimensions';
 import ThemedTextInput from '../../../components/ThemedTextInput';
 import BackButton from '../../../components/BackButton';
@@ -28,7 +28,7 @@ export default function EditProfile({editProfile, updateUser}) {
   const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
-  const user = useUser();
+  const user = useUserById(getRealmApp().currentUser.id);
   let button = (
     <ThemedButton
       label={'Submit'}

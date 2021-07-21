@@ -3,8 +3,7 @@ import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
 import ThemedTextInput from '../../components/ThemedTextInput';
-import {createUser} from '../../states/UserState';
-import auth from '@react-native-firebase/auth';
+import {getRealmApp, updateUser} from '../../states/UserState';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
 import PersonalityTest from './PersonalityTest';
@@ -21,7 +20,7 @@ const options = {
 
 export default function SignUp({user, update}) {
   const [name, setName] = useState(undefined);
-  const email = auth().currentUser.email;
+  const [email, setEmail] = useState(undefined);
   const [age, setAge] = useState(undefined);
   const [year, setYear] = useState(undefined);
   const [image, setImage] = useState(undefined);
@@ -29,7 +28,6 @@ export default function SignUp({user, update}) {
   const [linkedInUrl, setLinkedInUrl] = useState(undefined);
   const projects = [];
   const colors = useColors();
-  const [delay, setDelay] = useState(true);
   const [registered, setRegistered] = useState(false);
   let button = (
     <ThemedButton
@@ -37,10 +35,25 @@ export default function SignUp({user, update}) {
       style={styles.submitButton}
       disabled={true}
       onPress={() => {
-        createUser(name, email, age, year, imgBase64, linkedInUrl, projects);
+        updateUser(getRealmApp().currentUser.id, {
+          name: name,
+          email: email,
+          age: age,
+          year: year,
+          imgBase64: imgBase64,
+          linkedInUrl: linkedInUrl,
+          projects: projects,
+          confirmed: true,
+        });
       }}
     />
   );
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const [displayImage, setDisplayImage] = useState(
     <View style={[styles.image, {borderColor: colors.border}]}>
@@ -64,21 +77,6 @@ export default function SignUp({user, update}) {
     }
   }, [colors.border, image]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setDelay(false), 3000);
-    if (user && user.testResults) {
-      update();
-    }
-    if (user) {
-      setRegistered(true);
-    }
-    return () => clearTimeout(timeout);
-  }, [update, user]);
-
-  if (delay) {
-    return null;
-  }
-
   if (
     name &&
     email &&
@@ -92,7 +90,16 @@ export default function SignUp({user, update}) {
         label={'Submit'}
         style={styles.submitButton}
         onPress={async () => {
-          createUser(name, email, age, year, imgBase64, linkedInUrl, projects);
+          updateUser(getRealmApp().currentUser.id, {
+            name: name,
+            email: email,
+            age: age,
+            year: year,
+            imgBase64: imgBase64,
+            linkedInUrl: linkedInUrl,
+            projects: projects,
+            confirmed: true,
+          });
           setRegistered(true);
         }}
       />

@@ -12,8 +12,6 @@
   "dependencies": {
     "@react-native-community/google-signin": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-firebase/app": "^12.0.0",
-    "@react-native-firebase/auth": "^12.0.0",
     "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
@@ -26,7 +24,6 @@
     "react-native-elements": "^3.4.1",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.10.3",
-    "react-native-gifted-chat": "^0.16.3",
     "react-native-image-picker": "^4.0.4",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-paper": "^4.9.1",
@@ -36,6 +33,7 @@
     "react-native-screens": "^3.2.0",
     "react-native-tab-view": "2.16.0",
     "react-native-vector-icons": "^8.1.0",
+    "realm": "^10.6.0",
     "socket.io-client": "^4.1.2"
   },
   "devDependencies": {

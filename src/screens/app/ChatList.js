@@ -1,13 +1,13 @@
 import ChatUserButton from '../../components/ChatUserButton';
 import useChats from '../../states/ChatState';
 import React, {useState} from 'react';
-import auth from '@react-native-firebase/auth';
 import Chat from './Chat';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import ThemedText from '../../components/ThemedText';
 import useColors from '../../states/ThemeState';
 import {dim} from '../../lib/Dimensions';
 import BackButton from '../../components/BackButton';
+import {getCurrentUserEmail} from '../../states/UserState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -49,7 +49,7 @@ export default function ChatList() {
   const matches = chats.map(chat => {
     const members = chat.members;
     return members.filter(item => {
-      return item !== auth().currentUser.email;
+      return item !== getCurrentUserEmail();
     })[0];
   });
 

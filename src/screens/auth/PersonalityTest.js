@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {dim} from '../../lib/Dimensions';
 import ThemedText from '../../components/ThemedText';
-import useUser, {updateUser} from '../../states/UserState';
+import {getRealmApp, updateUser, useUserById} from '../../states/UserState';
 import ThemedButton from '../../components/ThemedButton';
 import useColors from '../../states/ThemeState';
 import ScaleButtons from '../../components/ScaleButtons';
@@ -12,7 +12,7 @@ const WIDTH = dim.width;
 
 export default function PersonalityTest({update}) {
   const colors = useColors();
-  const user = useUser();
+  const user = useUserById(getRealmApp().currentUser.id);
   const [q1, setQ1] = useState(undefined);
   const [q2, setQ2] = useState(undefined);
   const [q3, setQ3] = useState(undefined);
@@ -82,7 +82,7 @@ export default function PersonalityTest({update}) {
               break;
           }
 
-          updateUser(user._id, {testResults: workStyle});
+          updateUser(user._id, {testResults: workStyle, scores: scores});
           update();
         }}
       />

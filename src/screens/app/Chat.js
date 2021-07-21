@@ -9,7 +9,7 @@ import {Icon} from 'react-native-elements';
 import ContainButton from '../../components/ContainButton';
 import {useChat} from '../../states/ChatState';
 import {createMessage, useMessages} from '../../states/MessageState';
-import useUser from '../../states/UserState';
+import useUser, {getRealmApp, useUserById} from '../../states/UserState';
 import io from 'socket.io-client';
 
 const HEIGHT = dim.height;
@@ -17,7 +17,7 @@ const WIDTH = dim.width;
 
 export default function Chat({current}) {
   const colors = useColors();
-  const self = useUser();
+  const self = useUserById(getRealmApp().currentUser.id);
   const other = useUser(current);
   const chat = useChat(current);
   const messages = useMessages(chat);

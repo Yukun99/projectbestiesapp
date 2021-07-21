@@ -11,13 +11,17 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import ThemedText from '../../components/ThemedText';
-import useUser, {updateUser, useUsers} from '../../states/UserState';
+import {
+  getRealmApp,
+  updateUser,
+  useUserById,
+  useUsers,
+} from '../../states/UserState';
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import ContainButton from '../../components/ContainButton';
 import {Icon} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
-import auth from '@react-native-firebase/auth';
 import useColors from '../../states/ThemeState';
 import ThemedBlankImage from '../../components/ThemedBlankImage';
 
@@ -25,9 +29,9 @@ const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function Swipe() {
-  const self = useUser(auth().currentUser.email);
+  const self = useUserById(getRealmApp().currentUser.id);
   // reversed since the order of display means last card is rendered on top
-  const users = useUsers()
+  const users = useUsers(self)
     .reverse()
     .map(item => {
       let score = 0;
@@ -362,7 +366,6 @@ export default function Swipe() {
             color={'#27c1bf'}
             onPress={() => {
               Linking.openURL(info.linkedInUrl).then();
-              console.log('hi');
             }}
           />
           <ThemedText text={'Workstyle'} style={styles.infoTitle} />

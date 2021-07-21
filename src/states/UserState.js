@@ -1,9 +1,24 @@
 import axios from '../lib/axios';
 import {useEffect, useState} from 'react';
-import auth from '@react-native-firebase/auth';
+import Realm from 'realm';
+
+const appid = 'projectbesties-login-znmgf';
+const config = {
+  id: appid,
+};
+const app = new Realm.App(config);
+
+export function getCurrentUserEmail() {
+  return app.currentUser.profile.email;
+}
+
+export function getRealmApp() {
+  return app;
+}
 
 /**
  * Creates a new user.
+ * @param id Id to save user under. Used for user tracking.
  * @param name Full name of new user.
  * @param email Email of new user.
  * @param age Age of new user.
@@ -11,8 +26,10 @@ import auth from '@react-native-firebase/auth';
  * @param imgBase64 Image of new user, encoded as Base64.
  * @param linkedInUrl LinkedIn URL of new user.
  * @param projects Projects done by new user.
+ * @param confirmed Whether user has confirmed their account via their NUS email.
  */
 export function createUser(
+  id,
   name,
   email,
   age,
@@ -20,8 +37,34 @@ export function createUser(
   imgBase64,
   linkedInUrl,
   projects,
+  confirmed,
 ) {
   console.log('Creating new user with email: ' + email + '...');
+  if (id) {
+    axios
+      .post('/tinder/users', {
+        _id: id,
+        name: name,
+        email: email,
+        age: age,
+        year: year,
+        imgBase64: imgBase64,
+        linkedInUrl: linkedInUrl,
+        projects: projects,
+        confirmed: confirmed,
+      })
+      .then(
+        () => {
+          console.log(
+            'Created new user with email: ' + email + ' successfully.',
+          );
+        },
+        error => {
+          console.log(error + ' from createUser');
+        },
+      );
+    return;
+  }
   axios
     .post('/tinder/users', {
       name: name,
@@ -31,13 +74,14 @@ export function createUser(
       imgBase64: imgBase64,
       linkedInUrl: linkedInUrl,
       projects: projects,
+      confirmed: confirmed,
     })
     .then(
       () => {
         console.log('Created new user with email: ' + email + ' successfully.');
       },
       error => {
-        console.log(error + ' from createUser');
+        console.log(error.error + ' from createUser');
       },
     );
 }
@@ -50,9 +94,6 @@ export function createUser(
  * @returns {*|undefined} User with specified email.
  */
 function useUser(email) {
-  if (!email) {
-    email = auth().currentUser.email;
-  }
   const [user, setUser] = useState(undefined);
   console.log('Fetching user with email: ' + email + '...');
 
@@ -72,6 +113,46 @@ function useUser(email) {
     );
   }, [email]);
 
+  if (!user || !email) {
+    return undefined;
+  }
+
+  return user;
+}
+
+/**
+ * Fetch user with specified id.
+ * Returns current if id is undefined.
+ * Returns undefined if waiting for response.
+ * @param id Id to find user for.
+ * @param isUser
+ * @returns {*|undefined} User with specified Id.
+ */
+export function useUserById(id, isUser) {
+  if (isUser) {
+    if (id) {
+      id = id.id;
+    }
+  }
+  const [user, setUser] = useState(null);
+  console.log('Fetching user with id: ' + id + '...');
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await axios.get('/tinder/users/find/' + id);
+      setUser(res.data);
+    }
+
+    fetchData().then(
+      () => {
+        console.log('Fetched user with id: ' + id + ' successfully.');
+      },
+      error => {
+        console.log(error + ' from useUserById');
+      },
+    );
+  }, [id]);
+
   if (!user) {
     return undefined;
   }
@@ -84,7 +165,7 @@ function useUser(email) {
  * Returns empty if waiting for response.
  * @returns {[]|*} Array of all users except current user.
  */
-export function useUsers() {
+export function useUsers(user) {
   console.log('Fetching all users...');
   const [users, setUsers] = useState([]);
 
@@ -104,8 +185,12 @@ export function useUsers() {
     );
   }, []);
 
+  if (!user) {
+    return [];
+  }
+
   return users.filter(item => {
-    return item.email !== auth().currentUser.email;
+    return item.email !== user.email;
   });
 }
 
@@ -116,15 +201,40 @@ export function useUsers() {
  */
 export function updateUser(id, props) {
   console.log('Updating user database...');
+  let update = false;
   const newUser = {
     _id: id,
   };
   const keys = Object.keys(props);
   const values = Object.values(props);
   for (let i = 0; i < keys.length; ++i) {
+    if (keys[i] === '_id' && values[i] !== id) {
+      update = true;
+    }
     if (values[i]) {
       newUser[keys[i]] = values[i];
     }
+  }
+  if (update) {
+    axios.delete('/tinder/users/' + app.currentUser.profile.email).then(
+      () => {
+        console.log('Deleted user successfully.');
+      },
+      error => {
+        console.log(error + ' from deleteUser');
+      },
+    );
+    createUser(
+      newUser._id,
+      newUser.name,
+      newUser.email,
+      newUser.age,
+      newUser.year,
+      newUser.imgBase64,
+      newUser.linkedInUrl,
+      newUser.projects,
+      true,
+    );
   }
   axios.put('/tinder/users/:id', newUser).then(
     () => {
@@ -140,7 +250,7 @@ export function updateUser(id, props) {
  * Deletes all data related to current user from the database.
  */
 export function deleteUser() {
-  const email = auth().currentUser.email;
+  const email = app.currentUser.profile.email;
   console.log('Deleting user...');
   axios.delete('/tinder/users/' + email).then(
     () => {

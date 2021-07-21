@@ -1,6 +1,6 @@
-import auth from '@react-native-firebase/auth';
 import {useEffect, useState} from 'react';
 import axios from '../lib/axios';
+import {getCurrentUserEmail} from './UserState';
 
 /**
  * Creates a new chat.
@@ -10,7 +10,7 @@ export function createChat(recipient) {
   console.log('Creating new chat with recipient: ' + recipient + '...');
   axios
     .post('/tinder/chats', {
-      members: [auth().currentUser.email, recipient],
+      members: [getCurrentUserEmail(), recipient],
     })
     .then(
       () => {
@@ -33,7 +33,7 @@ export function createChat(recipient) {
  */
 export function useChat(recipient) {
   console.log('Fetching chat with recipient: ' + recipient + '...');
-  const user = auth().currentUser.email;
+  const user = getCurrentUserEmail();
   const [chat, setChat] = useState([]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function useChat(recipient) {
  */
 function useChats() {
   console.log('Fetching all chats...');
-  const user = auth().currentUser.email;
+  const user = getCurrentUserEmail();
   const [chats, setChats] = useState(undefined);
   useEffect(() => {
     async function fetchData() {
@@ -95,7 +95,7 @@ function useChats() {
  * Deletes all chats related to the current user from the database.
  */
 export function deleteChats() {
-  const email = auth().currentUser.email;
+  const email = getCurrentUserEmail();
   console.log('Deleting all chats...');
   axios.delete('/tinder/chats/find/' + email).then(
     () => {

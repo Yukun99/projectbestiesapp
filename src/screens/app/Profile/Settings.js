@@ -5,8 +5,7 @@ import useColors from '../../../states/ThemeState';
 import ThemedText from '../../../components/ThemedText';
 import BackButton from '../../../components/BackButton';
 import ThemedButton from '../../../components/ThemedButton';
-import {deleteUser} from '../../../states/UserState';
-import auth from '@react-native-firebase/auth';
+import {deleteUser, getRealmApp} from '../../../states/UserState';
 import useChats, {deleteChats} from '../../../states/ChatState';
 import {deleteMessages} from '../../../states/MessageState';
 
@@ -24,8 +23,8 @@ export default function Settings({editSettings}) {
       deleteUser();
       deleteMessages(chats);
       deleteChats();
-      auth()
-        .signOut()
+      getRealmApp()
+        .currentUser.logOut()
         .then(() => {});
     }
   });

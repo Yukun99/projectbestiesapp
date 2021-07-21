@@ -3,7 +3,7 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import useColors from '../states/ThemeState';
 import {dim} from '../lib/Dimensions';
 import ThemedText from './ThemedText';
-import useUser from '../states/UserState';
+import {getRealmApp, useUserById} from '../states/UserState';
 import {useMessages} from '../states/MessageState';
 import {useChat} from '../states/ChatState';
 import ThemedBlankImage from './ThemedBlankImage';
@@ -13,7 +13,7 @@ const HEIGHT = dim.height;
 
 export default function ChatUserButton({email, ...rest}) {
   const colors = useColors();
-  const user = useUser(email);
+  const user = useUserById(getRealmApp().currentUser.id);
   const chat = useChat(email);
   const messages = useMessages(chat);
   let image;
