@@ -1,29 +1,49 @@
 import ChatUserButton from '../../components/ChatUserButton';
-import useChats from '../../states/ChatState';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Chat from './Chat';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import ThemedText from '../../components/ThemedText';
 import useColors from '../../states/ThemeState';
 import {dim} from '../../lib/Dimensions';
 import BackButton from '../../components/BackButton';
-import useUser, {getRealmApp} from '../../states/UserState';
+import {getRealmApp, useUserById} from '../../states/UserState';
+import axios from '../../lib/axios';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function ChatList() {
-  const self = useUser(getRealmApp().currentUser, true);
-  const chats = useChats(self);
+  const self = useUserById(getRealmApp().currentUser, true);
+  const [chats, setChats] = useState(undefined);
   const [current, setCurrent] = useState(undefined);
+  const [noMatch, setNoMatch] = useState(false);
   const colors = useColors();
 
-  if (!chats || !self) {
-    // waiting for data, display nothing
-    return null;
-  }
+  useEffect(() => {
+    if (self) {
+      async function fetchData() {
+        const res = await axios.get('/tinder/chats/find/' + self.email);
+        setChats(res.data);
+      }
 
-  if (chats.length === 0) {
+      fetchData().then(
+        () => {
+          console.log('Fetched all chats successfully.');
+        },
+        error => {
+          console.log(error + ' from useChats');
+        },
+      );
+      const timeout = setTimeout(() => setNoMatch(false), 5000);
+      setNoMatch(true);
+      if (chats && chats.length > 0) {
+        setNoMatch(false);
+      }
+      return () => clearTimeout(timeout);
+    }
+  }, [chats, self]);
+
+  if (noMatch) {
     // no matches yet, suggest for user to go find some
     return (
       <View style={styles.container}>
@@ -39,6 +59,25 @@ export default function ChatList() {
           />
           <ThemedText
             text={'Swipe around to find some!'}
+            style={[styles.emptyText]}
+            color={colors.border}
+          />
+        </View>
+      </View>
+    );
+  }
+
+  if (!self || (!chats && !noMatch)) {
+    // waiting for data, display loading text
+    return (
+      <View style={styles.container}>
+        <ThemedText
+          style={[styles.list, {borderBottomColor: colors.border}]}
+          text={'Your Matches'}
+        />
+        <View style={styles.emptyContainer}>
+          <ThemedText
+            text={'Loading chats... Please wait...'}
             style={[styles.emptyText]}
             color={colors.border}
           />

@@ -20,10 +20,11 @@ import {
 import {dim} from '../../lib/Dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import ContainButton from '../../components/ContainButton';
-import {Icon} from 'react-native-elements';
+import {Icon, SocialIcon} from 'react-native-elements';
 import {createChat} from '../../states/ChatState';
 import useColors from '../../states/ThemeState';
 import ThemedBlankImage from '../../components/ThemedBlankImage';
+import ThemedProgressBar from '../../components/ThemedProgressBar';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
@@ -204,6 +205,74 @@ export default function Swipe() {
             </View>
           );
         }
+        const workstyles = (
+          <View style={styles.workstyleStackContainer}>
+            <View style={styles.workstyleStackItem}>
+              <Icon
+                name={'settings'}
+                type={'material-icons'}
+                size={0.025 * HEIGHT}
+                color={colors.text}
+                style={styles.workstyleIcon}
+              />
+              <View style={styles.cardWorkstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={user.scores[0] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+            <View style={styles.workstyleStackItem}>
+              <Icon
+                name={'menu-book'}
+                type={'material-icons'}
+                size={0.025 * HEIGHT}
+                color={colors.text}
+                style={styles.workstyleIcon}
+              />
+              <View style={styles.cardWorkstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={user.scores[1] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+            <View style={styles.workstyleStackItem}>
+              <Icon
+                name={'recommend'}
+                type={'material-icons'}
+                size={0.025 * HEIGHT}
+                color={colors.text}
+                style={styles.workstyleIcon}
+              />
+              <View style={styles.cardWorkstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={user.scores[2] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+            <View style={styles.workstyleStackItem}>
+              <Icon
+                name={'public'}
+                type={'material-icons'}
+                size={0.025 * HEIGHT}
+                color={colors.text}
+                style={styles.workstyleIcon}
+              />
+              <View style={styles.cardWorkstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={user.scores[3] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+          </View>
+        );
         if (i < index) {
           return null;
         } else if (i === index) {
@@ -235,6 +304,7 @@ export default function Swipe() {
               </Animated.View>
               <View style={styles.swipeCard}>
                 {image}
+                {workstyles}
                 <TouchableOpacity
                   style={[styles.textContainer, styles.infoButton]}
                   onPress={() => {
@@ -281,6 +351,7 @@ export default function Swipe() {
               ]}>
               <View style={styles.swipeCard}>
                 {image}
+                {workstyles}
                 <LinearGradient
                   colors={[
                     'rgba(0,0,0,1)',
@@ -320,7 +391,7 @@ export default function Swipe() {
     const projects =
       info.projects.length > 0 ? (
         info.projects.map((project, i) => (
-          <ThemedText key={i} text={project} style={styles.infoUser} />
+          <ThemedText key={i} text={'• ' + project} style={styles.infoUser} />
         ))
       ) : (
         <ThemedText
@@ -351,24 +422,90 @@ export default function Swipe() {
           {image}
           <View style={styles.header}>
             <ThemedText text={info.name} style={styles.infoName} />
+            <ContainButton
+              size={0.07 * HEIGHT}
+              style={styles.linkedInButton}
+              content={
+                <SocialIcon
+                  raised={false}
+                  type="linkedin"
+                  style={styles.linkedInIcon}
+                />
+              }
+              backgroundColor={'#FF69B4'}
+              borderColor={'#FF69B4'}
+              round={false}
+              onPress={() => {
+                Linking.openURL(info.linkedInUrl)
+                  .then()
+                  .catch(err => {
+                    console.log(err);
+                  });
+              }}
+            />
           </View>
-          <ThemedText text={'Age'} style={styles.infoTitle} />
-          <ThemedText text={info.age} style={styles.infoUser} />
-          <ThemedText text={'Year'} style={styles.infoTitle} />
-          <ThemedText text={info.year} style={styles.infoUser} />
+          <ThemedText text={'Basic Info'} style={styles.infoTitle} />
+          <ThemedText text={`• Age: ${info.age}`} style={styles.infoUser} />
+          <ThemedText text={`• Year: ${info.year}`} style={styles.infoUser} />
           <ThemedText text={'Projects'} style={styles.infoTitle} />
           {projects}
-          <ThemedText text={'LinkedIn'} style={styles.infoTitle} />
-          <ThemedText
-            text={info.linkedInUrl}
-            style={styles.infoUser}
-            color={'#27c1bf'}
-            onPress={() => {
-              Linking.openURL(info.linkedInUrl).then();
-            }}
-          />
-          <ThemedText text={'Workstyle'} style={styles.infoTitle} />
-          <ThemedText text={info.testResults} style={styles.infoUser} />
+          <ThemedText text={'Workstyles'} style={styles.infoTitle} />
+          <View style={styles.workstyleRowContainer}>
+            <View style={styles.workstyleContainer}>
+              <ThemedText
+                text={'• Logical'}
+                style={[styles.workstyleLabel, styles.labelLeft]}
+              />
+              <View style={styles.workstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={info.scores[0] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+            <View style={styles.workstyleContainer}>
+              <ThemedText
+                text={'• Organised'}
+                style={[styles.workstyleLabel, styles.labelRight]}
+              />
+              <View style={styles.workstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={info.scores[1] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={[styles.workstyleRowContainer, styles.bottomRow]}>
+            <View style={styles.workstyleContainer}>
+              <ThemedText
+                text={'• Supportive'}
+                style={[styles.workstyleLabel, styles.labelLeft]}
+              />
+              <View style={styles.workstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={info.scores[2] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+            <View style={styles.workstyleContainer}>
+              <ThemedText
+                text={'• Big Picture'}
+                style={[styles.workstyleLabel, styles.labelRight]}
+              />
+              <View style={styles.workstyleBarContainer}>
+                <ThemedProgressBar
+                  progress={info.scores[3] / 15}
+                  color={'#FF69B4'}
+                  style={styles.workstyleBar}
+                />
+              </View>
+            </View>
+          </View>
         </ScrollView>
       </View>
     );
@@ -490,7 +627,6 @@ const styles = StyleSheet.create({
     marginTop: 0.01 * HEIGHT,
     fontSize: 0.0375 * WIDTH,
     alignSelf: 'flex-start',
-    paddingBottom: 0.02 * HEIGHT,
   },
   infoTitle: {
     marginLeft: 0.05 * WIDTH,
@@ -505,14 +641,83 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   backButton: {
-    backgroundColor: 'pink',
     marginLeft: 0.25 * WIDTH,
     marginTop: -0.04 * HEIGHT,
     zIndex: 10,
     position: 'absolute',
     right: 0.05 * WIDTH,
     top: 0.75 * HEIGHT,
+  },
+  linkedInButton: {
+    backgroundColor: '#FF69B4',
+    zIndex: 10,
+    marginLeft: 0.03 * WIDTH,
+  },
+  linkedInIcon: {
+    zIndex: 10,
+    borderRadius: 5,
+  },
+  workstyleRowContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 0.05 * HEIGHT,
+  },
+  workstyleContainer: {
+    width: 0.5 * WIDTH - 5,
+    height: 0.05 * HEIGHT,
+    justifyContent: 'center',
+  },
+  workstyleLabel: {
+    fontSize: 0.0375 * WIDTH,
+    position: 'absolute',
+  },
+  workstyleStackContainer: {
+    height: 0.2 * HEIGHT,
+    width: 0.325 * WIDTH,
+    position: 'absolute',
+    right: 0.025 * WIDTH,
+    bottom: 0.2 * HEIGHT,
+    borderRadius: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    flex: 1,
+    flexDirection: 'column',
+  },
+  workstyleStackItem: {
+    height: 0.05 * HEIGHT,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  workstyleIcon: {
+    marginLeft: 0.025 * WIDTH,
+  },
+  cardWorkstyleBarContainer: {
+    width: 0.2 * WIDTH,
+    height: 0.01 * HEIGHT,
+    borderRadius: 0.005 * HEIGHT,
+    marginLeft: 0.025 * WIDTH,
+  },
+  workstyleBarContainer: {
+    width: 0.2 * WIDTH,
+    height: 0.01 * HEIGHT,
+    borderRadius: 0.005 * HEIGHT,
+    right: 0.02 * WIDTH,
+    alignSelf: 'flex-end',
+  },
+  workstyleBar: {
+    height: 0.01 * HEIGHT,
+    borderRadius: 0.005 * HEIGHT,
+  },
+  labelLeft: {
+    left: 0.05 * WIDTH,
+  },
+  labelRight: {
+    left: 0.01 * WIDTH,
+  },
+  bottomRow: {
+    paddingBottom: 0.1 * HEIGHT,
   },
 });

@@ -8,10 +8,12 @@ export default function ContainButton({
   borderColor,
   backgroundColor,
   borderWidth,
+  round,
   ...rest
 }) {
   const width = borderWidth ? borderWidth : borderColor ? 0.8 : 0;
   const background = backgroundColor ? backgroundColor : undefined;
+  const borderRadius = round === undefined || round === true ? size : 5;
 
   return (
     <View
@@ -21,7 +23,7 @@ export default function ContainButton({
         {
           height: size,
           width: size,
-          borderRadius: size,
+          borderRadius: borderRadius,
         },
       ]}>
       <TouchableOpacity
@@ -33,7 +35,7 @@ export default function ContainButton({
             borderWidth: width,
             height: size,
             width: size,
-            borderRadius: size,
+            borderRadius: borderRadius,
           },
         ]}
         {...rest}>

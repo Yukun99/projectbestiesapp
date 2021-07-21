@@ -23,6 +23,7 @@ export function getRealmApp() {
  * @param linkedInUrl LinkedIn URL of new user.
  * @param projects Projects done by new user.
  * @param confirmed Whether user has confirmed their account via their NUS email.
+ * @param deleted Whether user has been deleted from the database.
  */
 export function createUser(
   id,
@@ -213,7 +214,7 @@ export function updateUser(id, props) {
       newUser[keys[i]] = values[i];
     }
   }
-  newUser['deleted'] = false;
+  newUser.deleted = false;
   if (update) {
     axios.delete('/tinder/users/delete/' + app.currentUser.profile.email).then(
       () => {
