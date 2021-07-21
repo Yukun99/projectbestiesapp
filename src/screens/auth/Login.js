@@ -283,7 +283,7 @@ export default function Login({login}) {
               setUserInvalid(false);
               setUserReset(false);
               setPasswordShort(false);
-              setNoUser(true);
+              setNoUser(true);;
               return;
             }
             const credentials = Realm.Credentials.emailPassword(
@@ -297,7 +297,6 @@ export default function Login({login}) {
                 setPasswordShort(false);
                 setUserInvalid(false);
                 setNoUser(false);
-                login();
                 console.log('Logged in.');
               })
               .catch(err => {
@@ -320,6 +319,7 @@ export default function Login({login}) {
                     console.log(err);
                 }
               });
+            login();
           }}
         />
       </View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, LogBox, StyleSheet} from 'react-native';
 import SignUp from '../screens/auth/SignUp';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -36,24 +36,28 @@ function Icon(route) {
 
 export default function AppStack({logout}) {
   const user = useUserById(getRealmApp().currentUser, true);
+  const [name, setName] = useState(undefined);
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+    }
+  }, [user]);
   if (user === null) {
     return null;
   }
   if (!user) {
-    if (user && user.name === 'null') {
-      // before sign up
-      return (
-        <SignUp
-          user={user}
-          update={() => {
-            user.name = 'notnull';
-          }}
-        />
-      );
-    }
-  }
-  if (!user) {
     return null;
+  }
+  if (user && name === 'null') {
+    // before sign up
+    return (
+      <SignUp
+        user={user}
+        update={() => {
+          setName('notnull');
+        }}
+      />
+    );
   }
   return (
     <Tab.Navigator

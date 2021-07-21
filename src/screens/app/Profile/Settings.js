@@ -5,14 +5,15 @@ import useColors from '../../../states/ThemeState';
 import ThemedText from '../../../components/ThemedText';
 import BackButton from '../../../components/BackButton';
 import ThemedButton from '../../../components/ThemedButton';
-import {deleteUser, getRealmApp} from '../../../states/UserState';
+import {deleteUser, getRealmApp, useUserById} from '../../../states/UserState';
 import useChats, {deleteChats} from '../../../states/ChatState';
 import {deleteMessages} from '../../../states/MessageState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
-export default function Settings({editSettings}) {
+export default function Settings({editSettings, logout}) {
+  const user = useUserById(getRealmApp().currentUser, true);
   const colors = useColors();
   const [confirm, setConfirm] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -20,12 +21,10 @@ export default function Settings({editSettings}) {
 
   useEffect(() => {
     if (confirm) {
-      deleteUser();
+      deleteUser(user);
       deleteMessages(chats);
       deleteChats();
-      getRealmApp()
-        .currentUser.logOut()
-        .then(() => {});
+      logout();
     }
   });
 

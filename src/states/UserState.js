@@ -189,8 +189,12 @@ export function useUsers(user) {
     return [];
   }
 
+  // return users.filter(item => {
+  //   return !item.deleted && item.email !== user.email;
+  // });
+  // debug
   return users.filter(item => {
-    return item.email !== user.email;
+    return !item.deleted;
   });
 }
 
@@ -216,7 +220,7 @@ export function updateUser(id, props) {
     }
   }
   if (update) {
-    axios.delete('/tinder/users/' + app.currentUser.profile.email).then(
+    axios.delete('/tinder/users/delete/' + app.currentUser.profile.email).then(
       () => {
         console.log('Deleted user successfully.');
       },
@@ -249,8 +253,8 @@ export function updateUser(id, props) {
 /**
  * Deletes all data related to current user from the database.
  */
-export function deleteUser() {
-  const email = app.currentUser.profile.email;
+export function deleteUser(user) {
+  const email = user.email;
   console.log('Deleting user...');
   axios.delete('/tinder/users/' + email).then(
     () => {

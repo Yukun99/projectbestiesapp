@@ -61,6 +61,9 @@ const App: () => Node = () => {
         },
       );
     }
+  }, [logged]);
+
+  useEffect(() => {
     if (!logged) {
       setLoggedUser(undefined);
     }
@@ -85,6 +88,12 @@ const App: () => Node = () => {
       setEmail(currentUser.profile.email);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (getRealmApp().currentUser) {
+      setLogged(true);
+    }
+  }, []);
 
   if (user && !user.confirmed) {
     const oldId = user._id;

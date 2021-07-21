@@ -51,6 +51,7 @@ export default function Profile({logout}) {
         editSettings={() => {
           setSettings(false);
         }}
+        logout={logout}
       />
     );
   }

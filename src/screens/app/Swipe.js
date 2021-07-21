@@ -30,9 +30,8 @@ const WIDTH = dim.width;
 
 export default function Swipe() {
   const self = useUserById(getRealmApp().currentUser.id);
-  // reversed since the order of display means last card is rendered on top
+  // all other users sorted based on their relevance to self
   const users = useUsers(self)
-    .reverse()
     .map(item => {
       let score = 0;
       for (let i = 0; i < item.projects.length; i++) {

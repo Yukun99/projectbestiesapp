@@ -44,6 +44,7 @@ export default function SignUp({user, update}) {
           linkedInUrl: linkedInUrl,
           projects: projects,
           confirmed: true,
+          deleted: false,
         });
       }}
     />
@@ -99,6 +100,7 @@ export default function SignUp({user, update}) {
             linkedInUrl: linkedInUrl,
             projects: projects,
             confirmed: true,
+            deleted: false,
           });
           setRegistered(true);
         }}
