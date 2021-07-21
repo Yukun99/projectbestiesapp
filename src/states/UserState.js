@@ -153,10 +153,6 @@ export function useUserById(id, isUser) {
     );
   }, [id]);
 
-  if (!user) {
-    return undefined;
-  }
-
   return user;
 }
 
@@ -185,17 +181,17 @@ export function useUsers(user) {
     );
   }, []);
 
-  if (!user) {
+  if (!user || user === null) {
     return [];
   }
 
-  // return users.filter(item => {
-  //   return !item.deleted && item.email !== user.email;
-  // });
-  // debug
   return users.filter(item => {
-    return !item.deleted;
+    return !item.deleted && item.email !== user.email;
   });
+  // debug
+  // return users.filter(item => {
+  //   return !item.deleted;
+  // });
 }
 
 /**

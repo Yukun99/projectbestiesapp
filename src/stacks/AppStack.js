@@ -42,10 +42,7 @@ export default function AppStack({logout}) {
       setName(user.name);
     }
   }, [user]);
-  if (user === null) {
-    return null;
-  }
-  if (!user) {
+  if (user === null || !user || !user.name || !name) {
     return null;
   }
   if (user && name === 'null') {
