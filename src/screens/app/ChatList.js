@@ -7,17 +7,18 @@ import ThemedText from '../../components/ThemedText';
 import useColors from '../../states/ThemeState';
 import {dim} from '../../lib/Dimensions';
 import BackButton from '../../components/BackButton';
-import {getCurrentUserEmail} from '../../states/UserState';
+import useUser, {getRealmApp} from '../../states/UserState';
 
 const HEIGHT = dim.height;
 const WIDTH = dim.width;
 
 export default function ChatList() {
-  const chats = useChats();
+  const self = useUser(getRealmApp().currentUser, true);
+  const chats = useChats(self);
   const [current, setCurrent] = useState(undefined);
   const colors = useColors();
 
-  if (!chats) {
+  if (!chats || !self) {
     // waiting for data, display nothing
     return null;
   }
@@ -49,7 +50,7 @@ export default function ChatList() {
   const matches = chats.map(chat => {
     const members = chat.members;
     return members.filter(item => {
-      return item !== getCurrentUserEmail();
+      return item !== self.email;
     })[0];
   });
 

@@ -1,16 +1,16 @@
 import {useEffect, useState} from 'react';
 import axios from '../lib/axios';
-import {getCurrentUserEmail} from './UserState';
 
 /**
  * Creates a new chat.
+ * @param user User to create chat for.
  * @param recipient Recipient to create a new chat with.
  */
-export function createChat(recipient) {
+export function createChat(user, recipient) {
   console.log('Creating new chat with recipient: ' + recipient + '...');
   axios
     .post('/tinder/chats', {
-      members: [getCurrentUserEmail(), recipient],
+      members: [user.email, recipient],
     })
     .then(
       () => {
@@ -28,18 +28,18 @@ export function createChat(recipient) {
  * Fetch chat with specified recipient email.
  * Returns empty array if waiting for response.
  * Returns undefined if recipient is undefined.
+ * @param user User to find chat for.
  * @param recipient Recipient email to find chat for.
  * @returns {*|[]|undefined} Chat with specified recipient email.
  */
-export function useChat(recipient) {
+export function useChat(user, recipient) {
   console.log('Fetching chat with recipient: ' + recipient + '...');
-  const user = getCurrentUserEmail();
   const [chat, setChat] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get(
-        '/tinder/chats/find/' + user + '/' + recipient,
+        '/tinder/chats/find/' + user.email + '/' + recipient,
       );
       setChat(res.data);
     }
@@ -68,13 +68,12 @@ export function useChat(recipient) {
  * Returns empty array if waiting for response.
  * @returns {[]|*} Array of all chats involving current user.
  */
-function useChats() {
+function useChats(user) {
   console.log('Fetching all chats...');
-  const user = getCurrentUserEmail();
   const [chats, setChats] = useState(undefined);
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get('/tinder/chats/find/' + user);
+      const res = await axios.get('/tinder/chats/find/' + user.email);
       setChats(res.data);
     }
 
@@ -94,8 +93,8 @@ function useChats() {
 /**
  * Deletes all chats related to the current user from the database.
  */
-export function deleteChats() {
-  const email = getCurrentUserEmail();
+export function deleteChats(user) {
+  const email = user.email;
   console.log('Deleting all chats...');
   axios.delete('/tinder/chats/find/' + email).then(
     () => {

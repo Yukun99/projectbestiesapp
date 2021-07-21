@@ -11,10 +11,10 @@ import ThemedBlankImage from './ThemedBlankImage';
 const WIDTH = dim.width;
 const HEIGHT = dim.height;
 
-export default function ChatUserButton({email, ...rest}) {
+export default function ChatUserButton({...rest}) {
   const colors = useColors();
   const user = useUserById(getRealmApp().currentUser.id);
-  const chat = useChat(email);
+  const chat = useChat(user);
   const messages = useMessages(chat);
   let image;
 

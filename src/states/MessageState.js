@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import axios from '../lib/axios';
-import {getCurrentUserEmail} from './UserState';
 
 /**
  * Creates a new message.
@@ -51,7 +50,6 @@ export function useMessages(chat) {
     chatId = chat._id;
   }
   console.log('Fetching messages in chat: ' + chatId + '...');
-  const user = getCurrentUserEmail();
   const [messages, setMessages] = useState(undefined);
 
   useEffect(() => {
@@ -68,7 +66,7 @@ export function useMessages(chat) {
         console.log(error + ' from useMessages');
       },
     );
-  }, [user, chatId]);
+  }, [chatId]);
 
   return messages;
 }

@@ -8,10 +8,6 @@ const config = {
 };
 const app = new Realm.App(config);
 
-export function getCurrentUserEmail() {
-  return app.currentUser.profile.email;
-}
-
 export function getRealmApp() {
   return app;
 }
@@ -181,7 +177,7 @@ export function useUsers(user) {
     );
   }, []);
 
-  if (!user || user === null) {
+  if (!user) {
     return [];
   }
 

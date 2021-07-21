@@ -283,7 +283,7 @@ export default function Login({login}) {
               setUserInvalid(false);
               setUserReset(false);
               setPasswordShort(false);
-              setNoUser(true);;
+              setNoUser(true);
               return;
             }
             const credentials = Realm.Credentials.emailPassword(

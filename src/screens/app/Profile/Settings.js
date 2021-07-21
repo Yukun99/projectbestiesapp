@@ -23,10 +23,14 @@ export default function Settings({editSettings, logout}) {
     if (confirm) {
       deleteUser(user);
       deleteMessages(chats);
-      deleteChats();
+      deleteChats(user);
       logout();
     }
   });
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>

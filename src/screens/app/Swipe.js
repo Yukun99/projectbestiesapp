@@ -146,7 +146,7 @@ export default function Swipe() {
         swiped[swiped.length] = users[index].email;
         updateUser(self._id, {matches: matches, swiped: swiped});
         if (users[index].matches && users[index].matches.includes(self.email)) {
-          createChat(users[index].email);
+          createChat(self, users[index].email);
         }
         Animated.spring(position, {
           toValue: {x: WIDTH + 100, y: gestureState.dy},
