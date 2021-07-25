@@ -71,6 +71,7 @@ export default function Login({login}) {
             setNoUser(false);
             setPasswordShort(false);
             setUserReset(true);
+            setUserInvalid(false);
           })
           .catch(err => {
             switch (err.code) {
@@ -414,7 +415,6 @@ const styles = StyleSheet.create({
     width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0.8,
   },
   blankText: {
     fontSize: 0.04 * WIDTH,

@@ -141,10 +141,18 @@ export default function Swipe() {
     onPanResponderRelease: (evt, gestureState) => {
       if (gestureState.dx > 120) {
         // what to do when swiped right
-        const matches = self.matches;
-        matches[matches.length] = users[index].email;
-        const swiped = self.swiped;
-        swiped[swiped.length] = users[index].email;
+        let matches = self.matches;
+        if (matches) {
+          matches[matches.length] = users[index].email;
+        } else {
+          matches = [users[index].email];
+        }
+        let swiped = self.swiped;
+        if (swiped) {
+          swiped[swiped.length] = users[index].email;
+        } else {
+          swiped = [users[index].email];
+        }
         updateUser(self._id, {matches: matches, swiped: swiped});
         if (users[index].matches && users[index].matches.includes(self.email)) {
           createChat(self, users[index].email);
@@ -157,8 +165,12 @@ export default function Swipe() {
         position.setValue({x: 0, y: 0});
       } else if (gestureState.dx < -120) {
         // what to do when swiped left
-        const swiped = self.swiped;
-        swiped[swiped.length] = users[index].email;
+        let swiped = self.swiped;
+        if (swiped) {
+          swiped[swiped.length] = users[index].email;
+        } else {
+          swiped = [users[index].email];
+        }
         updateUser(self._id, {swiped: swiped});
         Animated.spring(position, {
           toValue: {x: -WIDTH - 100, y: gestureState.dy},
@@ -212,7 +224,7 @@ export default function Swipe() {
                 name={'settings'}
                 type={'material-icons'}
                 size={0.025 * HEIGHT}
-                color={colors.text}
+                color={'white'}
                 style={styles.workstyleIcon}
               />
               <View style={styles.cardWorkstyleBarContainer}>
@@ -228,7 +240,7 @@ export default function Swipe() {
                 name={'menu-book'}
                 type={'material-icons'}
                 size={0.025 * HEIGHT}
-                color={colors.text}
+                color={'white'}
                 style={styles.workstyleIcon}
               />
               <View style={styles.cardWorkstyleBarContainer}>
@@ -244,7 +256,7 @@ export default function Swipe() {
                 name={'recommend'}
                 type={'material-icons'}
                 size={0.025 * HEIGHT}
-                color={colors.text}
+                color={'white'}
                 style={styles.workstyleIcon}
               />
               <View style={styles.cardWorkstyleBarContainer}>
@@ -260,7 +272,7 @@ export default function Swipe() {
                 name={'public'}
                 type={'material-icons'}
                 size={0.025 * HEIGHT}
-                color={colors.text}
+                color={'white'}
                 style={styles.workstyleIcon}
               />
               <View style={styles.cardWorkstyleBarContainer}>
