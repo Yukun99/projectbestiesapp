@@ -23,20 +23,22 @@ export default function Chat({current}) {
   const messages = useMessages(chat);
   const [incMessage, setIncMessage] = useState(null);
   const [message, setMessage] = useState('');
+  const [connected, setConnected] = useState(false);
   const scrollViewRef = useRef();
   const socket = io('http://projectbesties-backend.herokuapp.com');
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Socket connected! Sending our information.');
-      if (self) {
+    if (self && !connected) {
+      socket.on('connect', () => {
+        console.log('Socket connected! Sending our information.');
         socket.emit('addUser', {
           userID: self._id,
         });
-      }
-      console.log('Information successfully sent.');
-    });
-  });
+        console.log('Information successfully sent.');
+      });
+      setConnected(true);
+    }
+  }, [self, connected, socket]);
 
   socket.on('newMessage', ({msg}) => {
     console.log('New message received with contents: ' + msg);
@@ -71,6 +73,7 @@ export default function Chat({current}) {
       recipientId: other._id,
       message: message,
     });
+    console.log('New message successfully sent.');
     setMessage('');
   };
 
