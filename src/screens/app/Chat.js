@@ -17,9 +17,9 @@ const WIDTH = dim.width;
 
 export default function Chat({current}) {
   const colors = useColors();
-  const self = useUserById(getRealmApp().currentUser.id);
+  const self = useUserById(getRealmApp().currentUser, true);
   const other = useUser(current);
-  const chat = useChat(current);
+  const chat = useChat(self, current);
   const messages = useMessages(chat);
   const [incMessage, setIncMessage] = useState(null);
   const [message, setMessage] = useState('');
