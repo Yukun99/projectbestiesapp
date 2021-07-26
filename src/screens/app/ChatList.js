@@ -20,7 +20,7 @@ export default function ChatList() {
   const colors = useColors();
 
   useEffect(() => {
-    if (self) {
+    if (self && !chats) {
       async function fetchData() {
         const res = await axios.get('/tinder/chats/find/' + self.email);
         setChats(res.data);
@@ -34,14 +34,17 @@ export default function ChatList() {
           console.log(error + ' from useChats');
         },
       );
-      const timeout = setTimeout(() => setNoMatch(false), 5000);
       setNoMatch(true);
-      if (chats && chats.length > 0) {
-        setNoMatch(false);
-      }
+      const timeout = setTimeout(() => setNoMatch(false), 5000);
       return () => clearTimeout(timeout);
     }
   }, [chats, self]);
+
+  useEffect(() => {
+    if (chats && chats.length > 0) {
+      setNoMatch(false);
+    }
+  }, [chats]);
 
   if (noMatch) {
     // no matches yet, suggest for user to go find some
@@ -105,6 +108,7 @@ export default function ChatList() {
           {matches.map((user, i) => {
             return (
               <ChatUserButton
+                self={self}
                 email={user}
                 onPress={() => setCurrent(user)}
                 key={i}
